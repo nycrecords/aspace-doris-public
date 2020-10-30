@@ -58,7 +58,7 @@
         <!-- .col -->
         <div class="col-lg collection-guides">
           <div class="d-flex justify-content-center text-center">
-            <h1 class="collection-guides-heading"><a href="<%= AppConfig[:public_proxy_url] %>">Collection Guides<br><small>The New York City Municipal Archives</small></a></h1>
+            <h1 class="collection-guides-heading"><a href="/">Collection Guides<br><small>The New York City Municipal Archives</small></a></h1>
           </div>
           <!-- .d-flex -->
         </div>
@@ -127,7 +127,7 @@
       </div>
     </form>
   </div>
-  <div class="container-fluid collapse d-lg-block px-0 border-lg-top" id="nav-primary">
+  <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-bottom" id="nav-primary">
     <h2 class="sr-only">
       Primary Navigation
     </h2>
@@ -135,7 +135,7 @@
       <nav class="nav nav-pills" role="navigation">
         <% $MAIN_MENU.each_with_index do |link, index| %>
           <div class="nav-item">
-            <a class="nav-link" href="<%= app_prefix(link[0]) %>" id="nav-item-0<%= index + 1 %>"
+            <a class="nav-link <%= 'active' if app_prefix(link[0]).include? params[:controller] %>" href="<%= app_prefix(link[0]) %>" id="nav-item-0<%= index + 1 %>"
                aria-haspopup="true" aria-expanded="false" role="button">
               <%= t(link[1]) %>
             </a>
