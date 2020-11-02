@@ -12,7 +12,6 @@ else
 end
 %>
 
-
 <%# build URL with slugs depending on the primary type %>
 <% case result.primary_type %>
   <% when "resource" %>
@@ -39,16 +38,15 @@ end
     <% url = result.uri %>
 <% end %>
 
-
 <%= (props.fetch(:full,false)? '<h1>' : '<h3>').html_safe %>
-<% if !props.fetch(:full,false) %>
-  <div class="card m-2">
-    <button class="btn btn-md btn-light text-primary">
-      <a class="record-title" href="<%= app_prefix(url) %>">
-      <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
-      </a>
-    </button>
-  </div>
+  <% if !props.fetch(:full,false) %>
+    <div class="card m-2">
+      <button class="btn btn-md btn-light text-primary">
+        <a href="<%= app_prefix(url) %>">
+          <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
+        </a>
+      </button>
+    </div>
   <% else %>
     <%== result.display_string %>
   <% end %>

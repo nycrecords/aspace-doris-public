@@ -44,11 +44,11 @@
 
   <%= render partial: 'shared/header' %>
 
-  <section id="content">
+  <div id="content" class ="scroll">
     <a id="maincontent"></a>
     <%= flash_messages %>
     <%= yield %>
-  </section>
+  </div>
 
   <script type="text/javascript">
       $(".upper-record-details .note-content").each(function (index, element) {

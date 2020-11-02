@@ -61,7 +61,7 @@ class SubjectsController <  ApplicationController
       @sort_opts.unshift(all_sorts['relevance'])
     end
     @no_statement = true
-    render 'search/search_results'
+    render 'search/subjects_search_results'
   end
 
   def search

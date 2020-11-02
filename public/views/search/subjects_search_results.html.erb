@@ -55,25 +55,17 @@
   <div class="row">
       <div class="col-12">
         <a name="main" title="<%= t('internal_links.main') %>"></a>
-          <div class="row">
-              <div class="col-sm-8">
-                  <%= render partial: 'shared/pagination', locals: {:pager => @pager} %>
-              </div>
-          </div>
         <main id="skip-header-target" role="main">
           <section class="py-5">
             <div class="container">
               <div class="row matrix-gutter">
-
-                <div class="col-sm border-right">
+                <div class="col-sm border-right" >
                   <h3 class="text-center h4">
                     <span class="fa fa-tag"></span>
-                    Topical
+                    Topics
                   </h3>
                   <% @subject_types.each do |subject_type, subjects_info| %>
-
                     <% if subject_type == 'topical' %>
-
                       <% subjects_info.each do |subject_info| %>
                         <a name="searchresults" id="searchresults"></a>
                         <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
@@ -83,27 +75,27 @@
                   <% end %>
                 </div>
 
-                  <div class="col-sm border-right">
-                    <h3 class="text-center h4">
-                      <span class="fa fa-tag"></span>
-                      Occupational
-                    </h3>
-                    <% @subject_types.each do |subject_type, subjects_info| %>
+                <div class="col-sm border-right">
+                  <h3 class="text-center h4">
+                    <span class="fa fa-tag"></span>
+                    Occupations
+                  </h3>
+                  <% @subject_types.each do |subject_type, subjects_info| %>
                     <% if subject_type == 'occupation' %>
-                    <% subjects_info.each do |subject_info| %>
-                      <a name="searchresults" id="searchresults"></a>
-                      <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
-                          {}).merge({:full => false})} %>
+                      <% subjects_info.each do |subject_info| %>
+                        <a name="searchresults" id="searchresults"></a>
+                        <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
+                            {}).merge({:full => false})} %>
+                      <% end %>
                     <% end %>
-                      <% end %>
-                      <% end %>
-                  </div>
-                  <div class="col-sm border-right">
-                    <h3 class="text-center h4">
-                      <span class="fa fa-tag"></span>
-                      Genre/Form
-                    </h3>
-                    <%@subject_types.each do |subject_type, subjects_info| %>
+                  <% end %>
+                </div>
+                <div class="col-sm border-right">
+                  <h3 class="text-center h4">
+                    <span class="fa fa-tag"></span>
+                    Genre/Form
+                  </h3>
+                  <%@subject_types.each do |subject_type, subjects_info| %>
                     <% if subject_type == 'genre_form' %>
                       <% subjects_info.each do |subject_info| %>
                         <a name="searchresults" id="searchresults"></a>
@@ -111,15 +103,14 @@
                             {}).merge({:full => false})} %>
                       <% end %>
                     <% end %>
-                      <% end %>
-                  </div>
+                  <% end %>
+                </div>
                 <div class="col-sm border-right">
                   <h3 class="text-center h4">
                     <span class="fa fa-tag"></span>
                     Geographic
                   </h3>
                   <% @subject_types.each do |subject_type, subjects_info| %>
-
                     <% if subject_type == 'geographic' %>
                       <% subjects_info.each do |subject_info| %>
                         <a name="searchresults" id="searchresults"></a>
@@ -129,17 +120,10 @@
                     <% end %>
                   <% end %>
                 </div>
-
-                  <%# end %>
               </div>
             </div>
            </section>
         </main>
-        <div class="row">
-            <div class="col-sm-9">
-                <%= render partial: 'shared/pagination', locals: {:pager => @pager, :pager_id => 'paging_bottom'} %>
-            </div>
-        </div>
       </div>
   </div>
 <% end %>
