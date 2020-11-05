@@ -74,26 +74,10 @@
                     <% end %>
                   <% end %>
                 </div>
-
                 <div class="col-sm border-right">
                   <h3 class="text-center h4">
-                    <span class="fa fa-tag"></span>
-                    Occupations
-                  </h3>
-                  <% @subject_types.each do |subject_type, subjects_info| %>
-                    <% if subject_type == 'occupation' %>
-                      <% subjects_info.each do |subject_info| %>
-                        <a name="searchresults" id="searchresults"></a>
-                        <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
-                            {}).merge({:full => false})} %>
-                      <% end %>
-                    <% end %>
-                  <% end %>
-                </div>
-                <div class="col-sm border-right">
-                  <h3 class="text-center h4">
-                    <span class="fa fa-tag"></span>
-                    Genre/Form
+                    <span class="fa fa-file"></span>
+                    Material Types
                   </h3>
                   <%@subject_types.each do |subject_type, subjects_info| %>
                     <% if subject_type == 'genre_form' %>
@@ -105,13 +89,28 @@
                     <% end %>
                   <% end %>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm border-right">
                   <h3 class="text-center h4">
-                    <span class="fa fa-tag"></span>
-                    Geographic
+                    <span class="fa fa-map-marker-alt"></span>
+                    Places
                   </h3>
                   <% @subject_types.each do |subject_type, subjects_info| %>
                     <% if subject_type == 'geographic' %>
+                      <% subjects_info.each do |subject_info| %>
+                        <a name="searchresults" id="searchresults"></a>
+                        <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
+                            {}).merge({:full => false})} %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </div>
+                <div class="col-sm">
+                  <h3 class="text-center h4">
+                    <span class="fa fa-address-card"></span>
+                    Occupations
+                  </h3>
+                  <% @subject_types.each do |subject_type, subjects_info| %>
+                    <% if subject_type == 'occupation' %>
                       <% subjects_info.each do |subject_info| %>
                         <a name="searchresults" id="searchresults"></a>
                         <%= render partial: 'shared/result', locals: {:result => subject_info, :props => (@result_props ||
