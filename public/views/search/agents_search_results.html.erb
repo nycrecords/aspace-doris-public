@@ -1,0 +1,55 @@
+<% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= render partial: 'shared/breadcrumbs' %>
+  </div>
+</div>
+<% if defined?(@results) %>
+  <% params.has_key?(:begins_with) ? search_char =params[:begins_with] : search_char= 'A' %>
+  <div class="row">
+    <div class="col-12">
+      <a name="main" title="<%= t('internal_links.main') %>"></a>
+      <main id="skip-header-target" role="main">
+        <section class="py-3">
+          <div class="container names">
+            <div class="row matrix-gutter">
+              <div id="azindex">
+                <ul id="index">
+                  <ul>
+                    <% index_range = 'A'..'Z' %>
+                    <%index_range.each do |letter| %>
+                      <li>
+                        <a href="?begins_with=<%=letter %>"
+                             <% if letter == search_char %>
+                              class ="selected-index"<% end %>>
+                          <%=letter %>
+                        </a>
+                      </li>
+                    <%end %>
+                  </ul>
+                </ul>
+              </div>
+
+              <%
+                col_count = 0
+                 @results.records.each do |result|
+                   if result['json']['names'][0]['primary_name'].upcase.start_with?(search_char.upcase)
+                     if col_count % 3 == 0 %>
+                    </div>
+                    <div class="row matrix-gutter">
+                  <% end %>
+                  <div class="col-sm-4 py-0">
+                    <%= render partial: 'landing/agents/agents_result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
+                  </div>
+                <%  col_count += 1
+                    end %>
+                <!-- .row -->
+              <% end %>
+            </div>
+          </div>
+          <!-- .container -->
+        </section>
+      </main>
+    </div>
+  </div>
+<% end %>
