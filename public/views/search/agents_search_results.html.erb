@@ -33,7 +33,7 @@
               <%
                 col_count = 0
                  @results.records.each do |result|
-                   if result['json']['names'][0]['primary_name'].upcase.start_with?(search_char.upcase)
+                   if result.display_string.upcase.start_with?(search_char.upcase)
                      if col_count % 3 == 0 %>
                     </div>
                     <div class="row matrix-gutter">
