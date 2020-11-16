@@ -1,0 +1,36 @@
+<%# any result that is going to be presented in a list %>
+<%# Pry::ColorPrinter.pp(result['json'])%>
+<tr>
+<% if !props.fetch(:full,false) %>
+  <td class="p-2">
+    <a href="<%= result.uri %>"></a>
+<% end %>
+<%= render partial: 'landing/resources/resources_idbadge', locals: {:result => result, :props => props } %>
+
+<p>
+  <% note_struct = result.note('abstract')
+    if note_struct.blank?
+     note_struct = result.note('scopecontent')
+    end
+    if !note_struct['note_text'].blank? %>
+        <% unless note_struct['is_inherited'].blank? %>
+          <%= inheritance(note_struct['is_inherited']).html_safe %>
+        <% end %>
+        <% if note_struct['note_text'].length > AppConfig[:abstract_note_length] %>
+          <% truncated_note = note_struct['note_text'][0..AppConfig[:abstract_note_length]-1] %>
+          <% end_index = truncated_note.rindex(' ') || AppConfig[:abstract_note_length]-1 %>
+          <%= (strip_tags(truncated_note[0..end_index - 1]) + '...').html_safe %>
+        <% else %>
+          <%= note_struct['note_text'].html_safe %>
+        <% end %>
+    <% end %>
+</p>
+  </td>
+  <td>
+    <% if result['json'].has_key?('dates') || result['json'].has_key?('dates_of_existence') %>
+        <% dates = (result['json']['dates'] || result['json']['dates_of_existence']
+        ).collect {|date| parse_date(date)}.reject{|label, expression| expression.blank?} %>
+        <%= dates[0][1] %>
+    <% end %>
+  </td>
+</tr>

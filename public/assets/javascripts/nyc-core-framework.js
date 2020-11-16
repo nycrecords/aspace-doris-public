@@ -118,3 +118,41 @@ function fireEvent(element, event) {
         return !element.dispatchEvent(evt);
     }
 }
+// Display collections in ascending/descending order
+$('#collection_title').click(function(){
+    var isSelected = $("#sort option[value='title_sort desc']").attr("selected");
+    //Sort records by title in ascending order
+    if (typeof isSelected !== typeof undefined && isSelected !== false)
+    {
+        $("#sort option[value='title_sort asc']").attr("selected","selected");
+        $("#sort option[value='title_sort desc']").removeAttr("selected");
+        $("#sort_form").submit();
+    }
+    //Sort records by title in descending order
+    else
+    {
+        $("#sort option[value='title_sort desc']").attr("selected","selected");
+        $("#sort option[value='title_sort asc']").removeAttr("selected");
+        $("#sort_form").submit();
+    }
+});
+//Sort records by date in descending order
+$('#collection_year').click(function(){
+    var isSelected = $("#sort option[value='year_sort desc']").attr("selected");
+    //Sort records by date in ascending order
+
+    if (typeof isSelected !== typeof undefined && isSelected !== false) {
+        $("#sort option[value='year asc']").attr("selected", "selected");
+        $("#sort option[value='year_sort desc']").removeAttr("selected");
+        $("#sort_form").submit();
+        $("#year-sort-icon").attr("class","fa fa-lg fa-caret-up");
+    }
+    //Sort records by date in descending order
+    else {
+        $("#sort option[value='year_sort desc']").attr("selected", "selected");
+        $("#sort option[value='year_sort asc']").removeAttr("selected");
+        $("#year-sort-icon").attr("class","fa fa-lg fa-caret-down");
+        $("#sort_form").submit();
+
+    }
+});

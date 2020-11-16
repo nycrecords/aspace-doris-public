@@ -1,0 +1,106 @@
+<% unless @facets.blank? %>
+  <%facets_type= Hash.new %>
+  <%h=Hash.new%>
+  <dl id="facets">
+    <%
+      preferred_facet_order = %w(repository primary_type agents subjects)
+      ordered_facet_types = @facets.keys.sort{|a,b|
+        if preferred_facet_order.include?(a) && preferred_facet_order.include?(b)
+          preferred_facet_order.index(a) <=> preferred_facet_order.index(b)
+        elsif preferred_facet_order.include?(a)
+          -1
+        elsif preferred_facet_order.include?(b)
+          1
+        else
+          0
+        end
+      }
+    %>
+
+    <%ordered_facet_types.each do |type| %>
+      <% h.merge!@facets.fetch(type, false) %>
+    <%end %>
+        <%
+          # Creating a hash with sub-types as key and facets as values
+          h.each do |v, ct|
+            #Splitting facets with multiple sub-types
+            if(v.include? "--")
+              split_string = v.split("--")
+              split_string.each do |sub_part|
+                sub_part = sub_part.strip
+                if facets_type.has_key?(type_info[sub_part])
+                  facets_type[type_info[sub_part]][v] =ct
+                else
+                  facets_type[type_info[sub_part]] = Hash.new
+                  facets_type[type_info[sub_part]][v] =ct
+                end
+              end
+              next
+            end
+            if facets_type.has_key?(type_info[v])
+              facets_type[type_info[v]][v] =ct
+            else
+              facets_type[type_info[v]] = Hash.new
+              facets_type[type_info[v]][v] =ct
+            end
+          end %>
+      <%facets_type.each do |facet_type,h| %>
+
+        <% if(facet_type == "temporal")
+             next
+           end
+          next unless h %>
+        <% case facet_type
+            when "topical"
+              title = "Topic"
+              type="subjects"
+           when "genre_form"
+             title = "Material Type"
+             type="subjects"
+           when "geographic"
+             title = "Location"
+             type="subjects"
+           when "occupation"
+             title = "Occupation"
+             type="subjects"
+           when "name_person"
+             title = "People"
+              type="published_agents"
+           when "name_corporate_entity"
+             title = "Organizations"
+              type="published_agents"
+              end
+        %>
+        <h3 class="h5"><%=title %></h3>
+        <ul class="small">
+          <% facet_count = 0 %>
+          <!-- Sorting values by title -->
+          <% h = h.sort_by { |key| key }.to_h %>
+
+          <% h.each do |v, ct| %>
+            <% if facet_count == 5 %>
+              <div class="more-facets">
+                <button class="more btn btn-outline-dark btn-sm mt-2"> more &nbsp;<span class="fa fa-sm fa-plus"></span></button>
+                <div class="below-the-fold" style="display:none">
+            <% end %>
+            <% facet_count += 1 %>
+            <li>
+              <a href="<%= app_prefix("#{@page_search}&filter_fields[]=#{type}&filter_values[]=#{CGI.escape(v)}") %>"
+                 rel="nofollow"
+                 title="<%= t('search_results.filter_by')%> '<%= get_pretty_facet_value(type,v) %>'">
+                <%= get_pretty_facet_value(type,v) %>
+              </a>
+              <span class="recordnumber"><b>(<%= ct %>)</b></span>
+            </li>
+          <% end %>
+
+          <% if facet_count > 5 %>
+            <button class="less btn btn-outline-dark btn-sm mt-2"> less &nbsp;<span class="fa fa-sm fa-minus"></span></button>
+            </div>
+          <% end %>
+          <span class="type-spacer">&nbsp;</span>
+        </ul>
+        <% h.clear %>
+      <% end %>
+  </dl>
+<% end %>
