@@ -2,7 +2,7 @@
  <%# Pry::ColorPrinter.pp(result['json'])%>
 
  <% if !props.fetch(:full,false) %>
-   <div class="recordrow" style="clear:both" data-uri="<%= result.uri %>">
+   <div class="recordrow h-100" style="clear:both;" data-uri="<%= result.uri %>">
  <% end %>
  <%= render partial: 'landing/agents/agents_idbadge', locals: {:result => result, :props => props } %>
  <div class="recordsummary" style="clear:both">
