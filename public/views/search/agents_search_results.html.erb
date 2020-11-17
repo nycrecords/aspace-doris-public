@@ -1,11 +1,13 @@
 <% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
+<% index_range = Array.new %>
+
 <div class="row">
   <div class="col-sm-12">
     <%= render partial: 'shared/breadcrumbs' %>
   </div>
 </div>
-<% if defined?(@results) %>
-  <% params.has_key?(:begins_with) ? search_char =params[:begins_with] : search_char= 'A' %>
+<% if defined?(@results)
+     params.has_key?(:begins_with) ? search_char =params[:begins_with] : search_char= 'A' %>
   <div class="row">
     <div class="col-12">
       <a name="main" title="<%= t('internal_links.main') %>"></a>
@@ -16,24 +18,24 @@
               <div id="azindex">
                 <ul id="index">
                   <ul>
-                    <% index_range = 'A'..'Z' %>
-                    <%index_range.each do |letter| %>
+                    <% ('A'..'Z').each do |index_char| index_range << index_char end %>
+                    <% index_range.each do |letter| %>
                       <li>
-                        <a href="?begins_with=<%=letter %>"
-                             <% if letter == search_char %>
-                              class ="selected-index"<% end %>>
-                          <%=letter %>
+                        <a href="?begins_with=<%= letter %>" <% if letter == search_char %>class="selected-index"<% end %>>
+                          <%= letter %>
                         </a>
                       </li>
-                    <%end %>
+                    <% end %>
+                    <li>
+                      <a href="?begins_with=%23" <% if search_char == '#'%>class ="selected-index"<% end %>>#</a>
+                    </li>
                   </ul>
                 </ul>
               </div>
 
-              <%
-                col_count = 0
+              <% col_count = 0
                  @results.records.each do |result|
-                   if result.display_string.upcase.start_with?(search_char.upcase)
+                   if (!(search_char =='#') && result.display_string.upcase.start_with?(search_char.upcase)) || !(result.display_string.upcase.start_with?(*index_range)) && (search_char == '#')
                      if col_count % 3 == 0 %>
                     </div>
                     <div class="row matrix-gutter">
@@ -45,11 +47,12 @@
                     end %>
                 <!-- .row -->
               <% end %>
-            </div>
-          </div>
+              </div>
+              </div>
           <!-- .container -->
         </section>
       </main>
     </div>
   </div>
+  <br>
 <% end %>

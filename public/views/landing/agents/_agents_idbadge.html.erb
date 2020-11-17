@@ -38,10 +38,10 @@ end
     <% url = result.uri %>
 <% end %>
 
-<%= (props.fetch(:full,false)? '<h1>' : '<h3>').html_safe %>
+<%= (props.fetch(:full,false)? '<h1>' : '<h3 class="h-100">').html_safe %>
   <% if !props.fetch(:full,false) %>
-    <div class="card m-2">
-      <button class="btn btn-md btn-light text-primary">
+    <div class="card m-2 h-100">
+      <button class="btn btn-md btn-light text-primary h-100 mx-1 my-2">
         <% if result['json']['jsonmodel_type'] == "agent_corporate_entity" %>
           <span class="fa fa-university">
           </span>
@@ -49,7 +49,7 @@ end
           <span class="fa fa-user">
           </span>
         <%end %>
-        <a href="<%= app_prefix(url) %>">
+        <a  href="<%= app_prefix(url) %>">
           <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
         </a>
       </button>
