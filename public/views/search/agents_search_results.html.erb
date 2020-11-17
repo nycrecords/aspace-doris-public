@@ -1,5 +1,5 @@
 <% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
-<%index_range = Array.new %>
+<% index_range = Array.new %>
 
 <div class="row">
   <div class="col-sm-12">
@@ -18,25 +18,16 @@
               <div id="azindex">
                 <ul id="index">
                   <ul>
-                    <% ('A'..'Z').each do |index_char|
-                      index_range << index_char
-                    end
-                    %>
-                    <%index_range.each do |letter| %>
+                    <% ('A'..'Z').each do |index_char| index_range << index_char end %>
+                    <% index_range.each do |letter| %>
                       <li>
-                        <a href="?begins_with=<%=letter %>"
-                           <% if letter == search_char %>
-                           class ="selected-index"<% end %>>
-                          <%=letter %>
+                        <a href="?begins_with=<%= letter %>" <% if letter == search_char %>class="selected-index"<% end %>>
+                          <%= letter %>
                         </a>
                       </li>
-                    <%end %>
+                    <% end %>
                     <li>
-                      <a href="?begins_with=%23"
-                         <% if search_char == '#'%>
-                         class ="selected-index"<% end %>>
-                        #
-                      </a>
+                      <a href="?begins_with=%23" <% if search_char == '#'%>class ="selected-index"<% end %>>#</a>
                     </li>
                   </ul>
                 </ul>
@@ -63,4 +54,5 @@
       </main>
     </div>
   </div>
+  <br>
 <% end %>
