@@ -18,6 +18,9 @@
               <div id="azindex">
                 <ul id="index">
                   <ul>
+                    <li>
+                      <a href="?begins_with=%23" <% if search_char == '#'%>class ="selected-index"<% end %>>#</a>
+                    </li>
                     <% ('A'..'Z').each do |index_char| index_range << index_char end %>
                     <% index_range.each do |letter| %>
                       <li>
@@ -26,9 +29,6 @@
                         </a>
                       </li>
                     <% end %>
-                    <li>
-                      <a href="?begins_with=%23" <% if search_char == '#'%>class ="selected-index"<% end %>>#</a>
-                    </li>
                   </ul>
                 </ul>
               </div>
