@@ -44,7 +44,7 @@
     <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
   </a>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
-  <small><%= comp_id %></small>
+  <small><%=t('resource._singular') %> <%= comp_id %></small>
 <% else %>
   <%== result.display_string %>
 <% end %>

@@ -120,7 +120,6 @@ Rails.application.config.after_initialize do
       end
       page = Integer(params.fetch(:page, "1"))
       facet_types =  %w{primary_type subjects published_agents}
-      facet_types.unshift('repository') if !@repo_id
       begin
         set_up_and_run_search(['resource'], facet_types, search_opts, params)
       rescue NoResultsError
