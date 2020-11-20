@@ -113,19 +113,16 @@
     </div>
   </div>
   <div class="container-fluid border-top collapse" id="global-search">
-    <form class="narrow py-2" aria-label="Search" role="search">
-      <div class="input-group">
-        <label class="sr-only" for="global-search-bar">Search</label>
-        <input class="form-control form-control-lg" id="global-search-bar" placeholder="Search by keyword">
-        <div class="input-group-btn">
-          <button class="btn btn-primary btn-lg" type="button" title="Search">
-            <span class="sr-only">Search</span>
-            <span class="fas fa-arrow-right" role="img"></span>
-          </button>
-          <span style="padding-left:5px;"><small><a href=""> advanced search</a></small></span>
-        </div>
-      </div>
-    </form>
+    <%= render partial: 'shared/global_search', locals: {
+        :search_url => "/search",
+        :title => t('archive._plural'),
+        :limit_options => [
+            ["#{t('actions.search')} #{t('search-limits.all')}",'']
+        ],
+        :field_options => [
+            ["#{t('search_results.filter.fullrecord')}",'']
+        ]
+    } %>
   </div>
   <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-bottom" id="nav-primary">
     <h2 class="sr-only">
