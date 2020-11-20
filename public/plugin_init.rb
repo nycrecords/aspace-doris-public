@@ -102,6 +102,64 @@ Rails.application.config.after_initialize do
     end
   end
 
+  class ResourcesController
+    # present a list of resources.  If no repository named, just get all of them.
+    def index
+      @repo_id = params.fetch(:rid, nil)
+      if @repo_id
+        @base_search = "/repositories/#{@repo_id}/resources?"
+        repo = archivesspace.get_record("/repositories/#{@repo_id}")
+        @repo_name = repo.display_string
+      else
+        @base_search = "/repositories/resources?"
+      end
+      search_opts = default_search_opts( DEFAULT_RES_INDEX_OPTS)
+      search_opts['fq'] = ["repository:\"/repositories/#{@repo_id}\""] if @repo_id
+      DEFAULT_RES_SEARCH_PARAMS.each do |k,v|
+        params[k] = v unless params.fetch(k, nil)
+      end
+      page = Integer(params.fetch(:page, "1"))
+      facet_types =  %w{primary_type subjects published_agents}
+      begin
+        set_up_and_run_search(['resource'], facet_types, search_opts, params)
+      rescue NoResultsError
+        flash[:error] = I18n.t('search_results.no_results')
+        redirect_back(fallback_location: '/') and return
+      rescue Exception => error
+        flash[:error] = I18n.t('errors.unexpected_error')
+        redirect_back(fallback_location: '/' ) and return
+      end
+
+      @context = repo_context(@repo_id, 'resource')
+      if @results['total_hits'] > 1
+        @search[:dates_within] = true if params.fetch(:filter_from_year,'').blank? && params.fetch(:filter_to_year,'').blank?
+        @search[:text_within] = true
+      end
+      @page_title = I18n.t('resource._plural')
+      @results_type = @page_title
+      @sort_opts = []
+      all_sorts = Search.get_sort_opts
+      all_sorts.delete('relevance') unless params[:q].size > 1 || params[:q] != '*'
+      all_sorts.keys.each do |type|
+        @sort_opts.push(all_sorts[type])
+      end
+
+      if params[:q].size > 1 || params[:q][0] != '*'
+        @sort_opts.unshift(all_sorts['relevance'])
+      end
+      @result_props = {
+          :no_res => true
+      }
+      @no_statement = true
+      #    if @results['results'].length == 1
+      #      @result =  @results['results'][0]
+      #      render 'resources/show'
+      #    else
+      render 'search/resources_search_results'
+      #    end
+    end
+  end
+
   module Searchable
     extend ActiveSupport::Concern
 

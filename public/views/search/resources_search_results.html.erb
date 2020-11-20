@@ -1,0 +1,73 @@
+<% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
+<%subjects_info=Array.new %>
+<%names_info=Hash.new %>
+<%type_info = Hash.new %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= render partial: 'shared/breadcrumbs' %>
+  </div>
+</div>
+<% if defined?(@results) %>
+  <div class="row" style = "display: none">
+    <div class="col-sm-9">
+      <a name="main" title="<%= t('internal_links.main') %>"></a>
+        <%= render partial: 'shared/sorter' %>
+    </div>
+  </div>
+
+        <main id="skip-header-target" role="main">
+          <section class="py-3">
+            <div class="container" >
+              <h2><%=@results['total_hits']%>
+                <% if @results['total_hits'] ==1 %>
+                 Collection
+                  <%else %>
+                  Collections
+                  <% end %>
+              </h2>
+              <div class="row matrix-gutter">
+                <div class="col-lg-8 mr-3">
+                  <table class="table">
+                    <thead>
+                      <tr id="collection_header">
+                        <th scope="col" id="collection_title" >Collection Title &nbsp<span  class="fa fa-lg fa-caret-up"></span></th>
+                        <th scope="col" id="collection_year">Dates &nbsp<span class="fa fa-lg fa-caret-up"></span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @results.records.each do |result|
+                        subjects_info += result['json']['subjects']%>
+                        <%= render partial: 'landing/resources/resources_result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
+                      <% end %>
+                    </tbody>
+                  </table>
+<!--                  Extracting names and their types and storing them as hash-->
+                  <%@results.records.each do |result|
+                    result['json']['linked_agents'].each do |linked_agent|
+                      linked_agent['_resolved']['names'].each do |name|
+                        name.to_json
+                        names_info[name['sort_name']]=name['jsonmodel_type']
+                      end
+                    end
+                  end%>
+
+<!--                  Extracting subjects and their types and storing them as hash-->
+                  <%subjects_info.each do |subject_info|
+                      subject_info['_resolved']['terms'].each do |term_info|
+                        type_info[term_info['term']] = term_info['term_type']
+                      end
+                  end%>
+                </div>
+<!--            Merging name and subject hashes -->
+                <%type_info =type_info.merge(names_info) %>
+                <div class="col-lg-3 ml-2 ">
+                  <h2 class="h4">Filter by:</h2>
+                  <div class="bg-light p-3">
+                  <%= render partial: 'landing/resources/only_facets', locals:{:type_info=>type_info} %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+<% end %>
