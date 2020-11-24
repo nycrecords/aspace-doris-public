@@ -142,7 +142,7 @@ $('#collection_year').click(function(){
     //Sort records by date in ascending order
 
     if (typeof isSelected !== typeof undefined && isSelected !== false) {
-        $("#sort option[value='year asc']").attr("selected", "selected");
+        $("#sort option[value='year_sort asc']").attr("selected", "selected");
         $("#sort option[value='year_sort desc']").removeAttr("selected");
         $("#sort_form").submit();
         $("#year-sort-icon").attr("class","fa fa-lg fa-caret-up");
