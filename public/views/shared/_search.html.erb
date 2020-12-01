@@ -2,19 +2,19 @@
   <a name="search" id="search"></a>
 
   <section class="py-5 pb-5">
+    <div class="container">
     <% @search = Search.new unless defined?(@search) %>
-    <%= form_tag(app_prefix("#{search_url}"), method: 'get', :id => 'advanced_search', role: 'Search', aria: {label: 'Search'}) do %>
+    <%= form_tag(app_prefix("#{search_url}"), method: 'get', :id => 'advanced_search', aria: {label: 'Search'}) do %>
       <% (0...[1, @search.q.length].max).each do |i| %>
-      <div class="container">
-        <div class="row pb-3 matrix-gutter" id="search_row_<%= i %>">
-
+        <div class="row search_row pb-3 matrix-gutter" id="search_row_<%= i %>">
+          <!-- Additional term operators -->
           <div class="col-sm-1 bool form-group">
             <%= label_tag("op#{i}", t('advanced_search.operator_label'), :class => 'sr-only') %>
             <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][i]), disabled: (i == 0), :id => "op#{i}",:class=> 'form-control' + (i == 0 ? ' hidden' : '')) %>
             <%= hidden_field_tag('op[]','', :id => 'op_') if i == 0 %>
           </div>
 
-  <!--        Keyword input field-->
+          <!-- Keyword input field -->
           <div class="col-md">
             <div class="input-group">
               <%= label_tag(:"q#{i}", t('navbar.search_placeholder'), :class => 'sr-only repeats') %>
@@ -23,13 +23,13 @@
             </div>
           </div>
 
-  <!--        Search by select-->
+          <!-- Search by select -->
           <div class="col-xs">
             <%= label_tag(:"field#{i}", t('search-field'),:class => 'sr-only repeats') %>
             <%= select_tag('field[]', options_for_select(field_options, @search[:field][i]), :id=> "field#{i}", :class=> 'repeats') %>
           </div>
 
-  <!--        Start and end year-->
+          <!-- Start and end year -->
           <div class="col-xs">
             <div class="input-group pb-1">
               <%= label_tag(:"from_year#{i}", "#{t('search_results.filter.from_year')}", :class => 'sr-only repeats') %>
@@ -44,23 +44,23 @@
           </div>
 
           <div class="col-sm py-3 pl-3">
-            <div><span class="fa fa-plus plusminus"></span></div>
+            <span class="plusminus"></span>
           </div>
         </div>
+      <% end %> <!-- End query loop -->
 
-  <!--      Submit button-->
-        <hr>
-        <div class="row matrix-gutter">
-          <div class="input-group-btn pl-1 py-2">
-            <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg", id: 'submit_search', name: 'commit', value: 'Search', title: 'Search') do %>
-              <span class="sr-only">Search</span>
-              <span>Search</span>
-            <% end %>
-          </div>
+      <!-- Submit button -->
+      <hr>
+      <div class="row matrix-gutter">
+        <div class="input-group-btn pl-1 py-2">
+          <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg", id: 'submit_search', name: 'commit', value: 'Search', title: 'Search') do %>
+            <span class="sr-only">Search</span>
+            <span>Search</span>
+          <% end %>
         </div>
       </div>
-      <% end %>
-    <% end %>
+    <% end %> <!-- End form tag -->
+    </div>
   </section>
 </div>
 <script type="text/javascript" >initialize_search();</script>
