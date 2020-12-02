@@ -1,0 +1,66 @@
+<div class="search" role="search">
+  <a name="search" id="search"></a>
+
+  <section class="py-5 pb-5">
+    <div class="container">
+    <% @search = Search.new unless defined?(@search) %>
+    <%= form_tag(app_prefix("#{search_url}"), method: 'get', :id => 'advanced_search', aria: {label: 'Search'}) do %>
+      <% (0...[1, @search.q.length].max).each do |i| %>
+        <div class="row search_row pb-3 matrix-gutter" id="search_row_<%= i %>">
+          <!-- Additional term operators -->
+          <div class="col-sm-1 bool form-group">
+            <%= label_tag("op#{i}", t('advanced_search.operator_label'), :class => 'sr-only') %>
+            <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][i]), disabled: (i == 0), :id => "op#{i}",:class=> 'form-control' + (i == 0 ? ' hidden' : '')) %>
+            <%= hidden_field_tag('op[]','', :id => 'op_') if i == 0 %>
+          </div>
+
+          <!-- Keyword input field -->
+          <div class="col-md">
+            <div class="input-group">
+              <%= label_tag(:"q#{i}", t('navbar.search_placeholder'), :class => 'sr-only repeats') %>
+              <%= text_field_tag('q[]', @search[:q][i], :placeholder => t('navbar.advanced_search_placeholder'), :id => "q#{i}",
+                                 :class => 'form-control form-control-lg repeats') %>
+            </div>
+          </div>
+
+          <!-- Search by select -->
+          <div class="col-xs">
+            <%= label_tag(:"field#{i}", t('search-field'),:class => 'sr-only repeats') %>
+            <%= select_tag('field[]', options_for_select(field_options, @search[:field][i]), :id=> "field#{i}", :class=> 'repeats') %>
+          </div>
+
+          <!-- Start and end year -->
+          <div class="col-xs">
+            <div class="input-group pb-1">
+              <%= label_tag(:"from_year#{i}", "#{t('search_results.filter.from_year')}", :class => 'sr-only repeats') %>
+              <%= text_field_tag('from_year[]', @search[:from_year][i], :size => 4,:maxlength => 4, :id=>"from_year#{i}",
+                                 :placeholder => 'Start Year',:class=>'form-control repeats advanced-search-year') %>
+            </div>
+            <div class="input-group">
+              <%= label_tag(:"to_year#{i}", "#{t('search_results.filter.to_year')}", :class=> 'sr-only repeats') %>
+              <%= text_field_tag('to_year[]', @search[:to_year][i], :size => 4, :maxlength => 4, :id => "to_year#{i}",
+                                 :class=> 'form-control repeats advanced-search-year', :placeholder => 'End Year') %>
+            </div>
+          </div>
+
+          <div class="col-sm py-3 pl-3">
+            <span class="plusminus"></span>
+          </div>
+        </div>
+      <% end %> <!-- End query loop -->
+
+      <!-- Submit button -->
+      <hr>
+      <div class="row matrix-gutter">
+        <div class="input-group-btn pl-1 py-2">
+          <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg", id: 'submit_search', name: 'commit', value: 'Search', title: 'Search') do %>
+            <span class="sr-only">Search</span>
+            <span>Search</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %> <!-- End form tag -->
+    </div>
+  </section>
+</div>
+<script type="text/javascript" >initialize_search();</script>
