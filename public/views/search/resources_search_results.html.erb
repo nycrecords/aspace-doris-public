@@ -16,22 +16,37 @@
   </div>
 
         <main id="skip-header-target" role="main">
-          <section class="py-3">
-            <div class="container" >
-              <h2><%=@results['total_hits']%>
+          <section class="py-3 d-flex justify-content-center">
+            <div class="container-fluid mx-3" >
+              <h2 class="pl-4"><%=@results['total_hits']%>
                 <% if @results['total_hits'] ==1 %>
                  Collection
                   <%else %>
                   Collections
                   <% end %>
               </h2>
-              <div class="row matrix-gutter">
-                <div class="col-lg-8 mr-3">
+              <div class="row matrix-gutter justify-content-center">
+                <div class="col-8">
                   <table class="table">
                     <thead>
                       <tr id="collection_header">
-                        <th scope="col" id="collection_title" >Collection Title &nbsp<span  class="fa fa-lg fa-caret-up"></span></th>
-                        <th scope="col" id="collection_year">Dates &nbsp<span class="fa fa-lg fa-caret-up"></span></th>
+                        <th scope="col" id="collection_title" >Collection Title &nbsp
+                          <span id="collection-caret"
+                            <% if params[:sort] == "title_sort desc" %>
+                              class="fa fa-lg fa-caret-down"
+                            <% else %>
+                                class="fa fa-lg fa-caret-up"
+                            <% end %>>
+                          </span>
+                        </th>
+                        <th class="w-20 text-center" scope="col" id="collection_year">Dates &nbsp
+                          <span id="year-caret"
+                            <% if params[:sort] == "year_sort desc"%>
+                              class="fa fa-lg fa-caret-down"
+                            <% else %>
+                                class="fa fa-lg fa-caret-up"
+                            <% end %>>
+                          </span>
                       </tr>
                     </thead>
                     <tbody>
@@ -60,7 +75,7 @@
                 </div>
 <!--            Merging name and subject hashes -->
                 <%type_info =type_info.merge(names_info) %>
-                <div class="col-lg-3 ml-2 ">
+                <div class="col-3 ml-1 ">
                   <h2 class="h4">Filter by:</h2>
                   <div class="bg-light p-3">
                   <%= render partial: 'landing/resources/only_facets', locals:{:type_info=>type_info} %>

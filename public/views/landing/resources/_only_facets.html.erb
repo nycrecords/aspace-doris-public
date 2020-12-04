@@ -26,7 +26,8 @@
             #Splitting facets with multiple sub-types
             if(v.include? "--")
               split_string = v.split("--")
-              split_string.each do |sub_part|
+              # split_string.each do |sub_part|
+              sub_part=split_string[0]
                 sub_part = sub_part.strip
                 if facets_type.has_key?(type_info[sub_part])
                   facets_type[type_info[sub_part]][v] =ct
@@ -34,7 +35,7 @@
                   facets_type[type_info[sub_part]] = Hash.new
                   facets_type[type_info[sub_part]][v] =ct
                 end
-              end
+              # end
               next
             end
             if facets_type.has_key?(type_info[v])

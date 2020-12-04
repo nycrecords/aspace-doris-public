@@ -119,7 +119,7 @@ Rails.application.config.after_initialize do
         params[k] = v unless params.fetch(k, nil)
       end
       page = Integer(params.fetch(:page, "1"))
-      facet_types =  %w{primary_type subjects published_agents}
+      facet_types =  %w{primary_type subjects published_agents creators}
       begin
         set_up_and_run_search(['resource'], facet_types, search_opts, params)
       rescue NoResultsError
