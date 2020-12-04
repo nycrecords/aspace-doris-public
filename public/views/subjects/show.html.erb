@@ -1,0 +1,64 @@
+<main id="skip-header-target" role="main">
+  <section class="py-3">
+    <div class="container">
+      <!--      top part-->
+      <div class="row pb-2 justify-content-between">
+        <div class="col"><h2><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></h2></div>
+      </div>
+      <div class="row pb-2 justify-content-between hidden">
+        <!--        Page actions probably not needed for subjects-->
+        <div class="col"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
+      </div>
+      <div class="row pb-1 justify-content-between">
+        <div class="col"><span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}" ) %></div>
+      </div>
+
+      <div>
+        <!--        This section is probably not needed for subjects-->
+        <% if !@result.dates.blank? %>
+          <% render partial: 'shared/dates', locals: {:dates => @result.dates} %>
+        <% end %>
+
+        <% if !@result['json']['component_id'].blank? %>
+          <span class='component'><%= t(component._singular) %>: <%= @result['json']['component_id'] %></span>
+        <% end %>
+        <% if !@result['json']['ref_id'].blank? %>
+          <span class='ref_id'>[Ref. ID: <%= @result['json']['ref_id'] %>]</span>
+        <% end %>
+        <% if @result['json']['scope_note'].present? %>
+          <span class="inline-label"><%= t('scope_note') %>
+            :</span> <%= process_mixed_content(@result['json']['scope_note']).html_safe %>
+        <% end %>
+        <%= render partial: 'shared/display_notes' %>
+      </div>
+
+      <!--      table rows-->
+      <div class="row matrix-gutter">
+        <div class="col-lg-8 mr-3">
+          <% unless @results.blank? || @results['total_hits'] == 0 %>
+            <h3><%= t('found', {:count => @results['total_hits'], :type => @results['total_hits'] == 1? t('coll_obj._singular') : t('coll_obj._plural')}) %>:</h3>
+            <hr>
+            <table class="table">
+              <tbody>
+              <% @results.records.each do |result| %>
+                <%= render partial: 'subjects/result', locals: {:result => result, :props => {:full => false}} %>
+              <% end %>
+              </tbody>
+            </table>
+            <%= render partial: 'shared/pagination', locals: {:pager  => @pager}  %>
+          <% end %>
+        </div>
+
+        <!--        side bar-->
+        <div class="col-lg-3 ml-4">
+          <h2 class="h4">Additional filters:</h2>
+          <div class="bg-light p-3">
+            <%= render partial: 'subjects/only_facets' %>
+          </div>
+        </div>
+      </div>
+      <!-- .row -->
+    </div>
+    <!-- .container -->
+  </section>
+</main>
