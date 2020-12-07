@@ -1,0 +1,95 @@
+<%subjects_list = Hash.new{|h,k| h[k]=Array.new(Array.new)}%>
+<% list.each do |item| %>
+  <!--      Handling subjects-->
+  <%if !item['terms'].nil? %>
+    <%item['terms'].take(1).each do |t_type|%>
+      <%subjects_list[t_type['term_type']] << [t_type['term'],item['uri']]%>
+    <% end %>
+<!--        Handling Names listed as subjects(Agent links)-->
+  <% else %>
+    <%subjects_list['names'] << [item['title'],item['uri']]  %>
+  <%end %>
+<% end %>
+
+<div class="row">
+  <div class="col-sm border-right" >
+    <h6 class="text-center">
+      Topics
+    </h6>
+    <% subjects_list.each do |subject_type, subjects_info| %>
+      <% if subject_type == 'topical' %>
+        <ul class="sidebar ml-0">
+        <% subjects_info.each do |subject_info| %>
+          <li><a href=<%=subject_info[1] %>>
+            <%=subject_info[0] %>
+          </a></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-sm border-right">
+    <h6 class="text-center">
+      Material Types
+    </h6>
+    <%subjects_list.each do |subject_type, subjects_info| %>
+      <% if subject_type == 'genre_form' %>
+        <ul class="sidebar ml-0">
+        <% subjects_info.each do |subject_info| %>
+         <li> <a href=<%=subject_info[1] %>>
+            <%=subject_info[0] %>
+         </a></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-sm border-right">
+    <h6 class="text-center">
+      Places
+    </h6>
+    <% subjects_list.each do |subject_type, subjects_info| %>
+      <% if subject_type == 'geographic' %>
+        <ul class="sidebar ml-0">
+        <% subjects_info.each do |subject_info| %>
+         <li> <a href=<%=subject_info[1] %>>
+            <%=subject_info[0] %>
+         </a></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-sm border-right">
+    <h6 class="text-center ">
+      Occupations
+    </h6>
+    <% subjects_list.each do |subject_type, subjects_info| %>
+      <% if subject_type == 'occupation' %>
+        <ul class="sidebar ml-0">
+        <% subjects_info.each do |subject_info| %>
+          <li><a href=<%=subject_info[1] %>>
+            <%=subject_info[0] %>
+          </a></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-sm">
+    <h6 class="text-center">
+      Names
+    </h6>
+    <% subjects_list.each do |subject_type, subjects_info| %>
+      <% if subject_type == 'names' %>
+        <ul class="sidebar ml-0">
+        <% subjects_info.each do |subject_info| %>
+          <li><a href=<%=subject_info[1] %>>
+            <%=subject_info[0] %>
+          </a></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  </div>
+</div>

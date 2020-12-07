@@ -1,0 +1,14 @@
+<div class="card">
+  <a class="card-header h4 collapse collapsed" id="<%= p_id %>" data-toggle="collapse" href="#panel-<%= p_id %>"   role="tab" aria-expanded="false" aria-controls="panel-<%=p_id %>">
+    <span class="title" role="heading" aria-level="3">
+      <%= p_title %>
+    </span>
+  </a>
+
+  <div class="collapse" id="panel-<%= p_id %>" role="tabpanel" aria-labelledby="<%= p_id %>" data-parent="#accordion-01">
+    <div class="card-body bg-white">
+      <%= p_body %>
+    </div>
+  </div>
+
+</div>
