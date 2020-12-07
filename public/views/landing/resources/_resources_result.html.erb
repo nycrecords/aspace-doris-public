@@ -26,7 +26,7 @@
     <% end %>
 </p>
   </td>
-  <td>
+  <td class="w-20 text-center">
     <% if result['json'].has_key?('dates') || result['json'].has_key?('dates_of_existence') %>
         <% dates = (result['json']['dates'] || result['json']['dates_of_existence']
         ).collect {|date| parse_date(date)}.reject{|label, expression| expression.blank?} %>
