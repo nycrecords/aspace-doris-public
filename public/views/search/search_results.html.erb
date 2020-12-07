@@ -17,6 +17,7 @@
                                                                        ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
                                                     :header_size => '2',
                                                     :show_header => true } %>
+      <%= render partial: 'shared/appointment_banner' %>
     <% else %>
 
       <% unless defined?(@no_statement) %>
