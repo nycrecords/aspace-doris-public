@@ -31,3 +31,20 @@ en:
   navbar:
     search_placeholder: Search by keyword
     advanced_search_placeholder: Search
+
+  search_results:
+    search_for: "Search%{conditions}"
+    keyword_contain: "&nbsp;Keyword(s): <span class='searchterm'><strong>%{kw}</strong></span>"
+    title_contain: "&nbsp;Title: <span class='searchterm'><strong>%{kw}</strong></span>"
+    notes_contain: "&nbsp;Note: <span class='searchterm'><strong>%{kw}</strong></span>"
+    creators_text_contain: "&nbsp;Creator: <span class='searchterm'><strong>%{kw}</strong></span>"
+    subjects_text_contain: "&nbsp;Subject: <span class='searchterm'><strong>%{kw}</strong></span>"
+    identifier_contain: "&nbsp;Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
+    four_part_id_contain: "&nbsp;Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
+    op:
+      AND: and
+      OR: or
+      NOT: and not
+    op_first_row:
+      NOT: Not
+    results_head: "%{start} - %{end} of %{total} %{type}"
