@@ -2,15 +2,14 @@
   <a name="search" id="search"></a>
   <% @search = Search.new unless defined?(@search) %>
   <%= form_tag(app_prefix("#{search_url}"), method: 'get', :id => 'global_search', class: 'narrow py-2', aria: {label: 'Search'}) do %> <!-- form tag begin -->
-    <% (0...[1, @search.q.length].max).each do |i| %> <!-- Query loop begin -->
-      <div class="input-group" id="global_search_row_<%= i %>">
+      <div class="input-group" id="global_search_row">
         <div class="col-sm-1 bool form-group form-inline hidden">
-          <%= label_tag("op#{i}", t('advanced_search.operator_label'), :class => 'sr-only') %>
-          <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][i]), disabled: (i == 0), :id => "global_search_op#{i}", :class => 'form-control' + (i == 0 ? ' hidden' : '')) %>
-          <%= hidden_field_tag('op[]', '', :id => 'global_search_op_') if i == 0 %>
+          <%= label_tag("op", t('advanced_search.operator_label'), :class => 'sr-only') %>
+          <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][0]), disabled: true, :id => "global_search_op", :class => 'form-control hidden') %>
+          <%= hidden_field_tag('op[]', '', :id => 'global_search_op') %>
         </div>
         <%= label_tag(:"global-search-bar", t('navbar.search_placeholder'), :class => 'sr-only repeats') %>
-        <%= text_field_tag('q[]', @search[:q][i], :placeholder => t('navbar.search_placeholder'), :value => '', :id => 'global-search-bar',
+        <%= text_field_tag('q[]', @search[:q][0], :placeholder => t('navbar.search_placeholder'), :value => '', :id => 'global-search-bar',
                            :class => 'form-control form-control-lg') %>
         <div class="input-group-btn">
           <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg", id: 'submit_global_search', name: 'commit', value: 'Search', title: 'Search', data: {disable_with: '<span class="fas fa-arrow-right" role="img"></span>'}) do %>
@@ -20,6 +19,5 @@
           <span><small><a href="<%=  app_prefix('/search?reset=true') %>" title="<%= I18n.t('search_tab', :target => t('archive._plural'))%>" class="advanced-search-link">advanced search</a></small></span>
         </div>
       </div>
-    <% end %> <!-- Query loop end -->
   <% end %> <!-- Form tag end -->
 </div>
