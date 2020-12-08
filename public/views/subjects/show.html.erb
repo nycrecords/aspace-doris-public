@@ -1,20 +1,20 @@
 <main id="skip-header-target" role="main">
-  <section class="py-3">
-    <div class="container">
-      <!--      top part-->
+  <section class="py-3 d-flex justify-content-center">
+    <div class="container-fluid mx-3">
+      <!-- Top headings-->
       <div class="row pb-2 justify-content-between">
-        <div class="col"><h2><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></h2></div>
+        <div class="col pl-7"><h2><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></h2></div>
       </div>
       <div class="row pb-2 justify-content-between hidden">
-        <!--        Page actions probably not needed for subjects-->
+        <!-- Page actions probably not needed for subjects-->
         <div class="col"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
       </div>
       <div class="row pb-1 justify-content-between">
-        <div class="col"><span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}" ) %></div>
+        <div class="col pl-7"><span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}" ) %></div>
       </div>
 
+      <!-- This section is probably not needed for subjects -->
       <div>
-        <!--        This section is probably not needed for subjects-->
         <% if !@result.dates.blank? %>
           <% render partial: 'shared/dates', locals: {:dates => @result.dates} %>
         <% end %>
@@ -32,11 +32,11 @@
         <%= render partial: 'shared/display_notes' %>
       </div>
 
-      <!--      table rows-->
-      <div class="row matrix-gutter">
-        <div class="col-lg-8 mr-3">
+      <!-- Table rows -->
+      <div class="row matrix-gutter justify-content-center">
+        <div class="col-8">
           <% unless @results.blank? || @results['total_hits'] == 0 %>
-            <h3><%= t('found', {:count => @results['total_hits'], :type => @results['total_hits'] == 1? t('coll_obj._singular') : t('coll_obj._plural')}) %>:</h3>
+            <h3 class="pl-2"><%= t('found', {:count => @results['total_hits'], :type => @results['total_hits'] == 1? t('coll_obj._singular') : t('coll_obj._plural')}) %>:</h3>
             <hr>
             <table class="table">
               <tbody>
@@ -49,11 +49,13 @@
           <% end %>
         </div>
 
-        <!--        side bar-->
-        <div class="col-lg-3 ml-4">
-          <h2 class="h4">Additional filters:</h2>
-          <div class="bg-light p-3">
-            <%= render partial: 'subjects/only_facets' %>
+        <!-- Side bar-->
+        <div class="col-3">
+          <div id="subject-facets" <% if @facets.blank? %>class="hidden"<% end %>>
+            <h2 class="h4">Additional filters:</h2>
+            <div class="bg-light p-3">
+              <%= render partial: 'subjects/only_facets' %>
+            </div>
           </div>
         </div>
       </div>

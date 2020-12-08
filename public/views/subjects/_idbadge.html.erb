@@ -55,7 +55,7 @@
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <% unless comp_id.blank? %>
     <div class="identifier">
-      <small><%=t('resource._singular') %> <%= comp_id %></small>
+      <small><strong><%=t('resource._singular') %> <%= comp_id %></strong></small>
     </div>
   <% end %>
 </div>

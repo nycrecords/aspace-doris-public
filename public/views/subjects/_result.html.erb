@@ -19,7 +19,7 @@
        note_struct = result.note('scopecontent')
      end
      if !note_struct['note_text'].blank? %>
-    <div class="abstract single_note"><span class='inline-label'><%= note_struct['label'] %></span>
+    <div class="abstract single_note"><strong><span class='inline-label'><%= note_struct['label'] %></span>:</strong>
       <% unless note_struct['is_inherited'].blank? %>
         <%= inheritance(note_struct['is_inherited']).html_safe %>
       <% end %>
