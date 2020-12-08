@@ -1,0 +1,91 @@
+<%
+  if result.level
+    if result.primary_type =~ /digital_object/
+      level = I18n.t("enumerations.digital_object_level.#{result.level}", :default => result.level)
+      badge_label = I18n.t("digital_object._public.badge_label", :level => level)
+    else
+      level = result.level == 'otherlevel' ? result.other_level : result.level
+      badge_label = I18n.t("enumerations.archival_record_level.#{level}", :default => level)
+    end
+  else
+    badge_label = t("#{result.primary_type}._singular")
+  end
+  indent_level = @result.raw.fetch('ancestors', []).length
+%>
+
+<%# build URL with slugs depending on the primary type %>
+<% case result.primary_type %>
+<% when "resource" %>
+  <% url = resource_base_url(result) %>
+<% when "archival_object" %>
+  <% url = archival_object_base_url(result) %>
+<% when "digital_object" %>
+  <% url = digital_object_base_url(result) %>
+<% when "accession" %>
+  <% url = accession_base_url(result) %>
+<% when "subject" %>
+  <% url = subject_base_url(result) %>
+<% when "classification" %>
+  <% url = classification_base_url(result) %>
+<% when "agent_person" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_family" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_corporate_entity" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_software" %>
+  <% url = agent_base_url(result) %>
+<% else %>
+  <% url = result.uri %>
+<% end %>
+
+<% if indent_level == 1%>
+  <hr class="mt-2"/>
+<% end %>
+
+<%if indent_level < 2 %>
+  <h2>
+    <% if !props.fetch(:full,false) %>
+      <h4 class="pt-2 pb-2">
+        <%if indent_level!= 0 %>
+          <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
+          <% unless comp_id.blank? %>
+            <%= badge_label %> <%=comp_id %> :
+          <% end %>
+        <% end %>
+        <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
+      </h4>
+
+    <% else %>
+      <%== result.display_string %>
+      <small><%=t('resource._singular') %> <%= @result.ead_id %></small>
+    <% end %>
+  </h2>
+
+<% else %>
+  <h5 class="ml-2">
+    <% if !props.fetch(:full,false) %>
+      <a class="record-title" href="<%= app_prefix(url) %>">
+        <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
+      </a>
+
+    <% else %>
+      <%== result.display_string %>
+      <small><%=t('resource._singular') %> <%= @result.ead_id %></small>
+    <% end %>
+
+    <div class="badge-and-identifier">
+      <small>
+        <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %>">
+          <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %> <% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %><% end %>
+        </div>
+        <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
+        <% unless comp_id.blank? %>
+          <div class="identifier">
+            <span class="id-label"><%= t('search_sorting.identifier') %>:</span>&#160;<span class="component"><%= comp_id %></span>
+          </div>
+        <% end %>
+      </small>
+    </div>
+  </h5>
+<% end %>

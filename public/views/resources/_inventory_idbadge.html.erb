@@ -38,14 +38,13 @@
   <% url = result.uri %>
 <% end %>
 
-<%= (props.fetch(:full,false)? '<h1>' : '<h3>').html_safe %>
 <% if !props.fetch(:full,false) %>
-  <a class="record-title" href="<%= app_prefix(url) %>">
-    <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
-  </a>
-  <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
-  <div><small><b><%=t('resource._singular') %> <%= comp_id %></b></small></div>
+  <span class="card-title align-middle description">
+    <a href="<%= app_prefix(url) %>">
+      <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
+    </a>
+  </span>
+
 <% else %>
   <%== result.display_string %>
 <% end %>
-<%= (props.fetch(:full,false)? '</h1>' : '</h3>').html_safe %>

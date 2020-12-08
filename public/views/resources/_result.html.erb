@@ -1,0 +1,12 @@
+ <%# any result that is going to be presented in a list %>
+ <%# Pry::ColorPrinter.pp(result['json'])%>
+
+<% if !props.fetch(:full,false) %>
+ <div class="card text-center pt-1 pb-1 border" style="clear:both" data-uri="<%= result.uri %>">
+<% end %>
+
+<%= render partial: 'resources/inventory_idbadge', locals: {:result => result, :props => props } %>
+
+<% if !props.fetch(:full,false) %>
+   </div>
+<% end %>
