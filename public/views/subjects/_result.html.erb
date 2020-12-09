@@ -6,7 +6,6 @@
 
 <td class="p-2">
   <%= render partial: 'subjects/idbadge', locals: {:result => result, :props => props} %>
-  <br>
 
   <% if !result['parent_institution_name'].blank? %>
     <div><strong><%= t('parent_inst') %>:</strong>
@@ -19,7 +18,7 @@
        note_struct = result.note('scopecontent')
      end
      if !note_struct['note_text'].blank? %>
-    <div class="abstract single_note"><strong><span class='inline-label'><%= note_struct['label'] %></span>:</strong>
+    <div class="abstract single_note pt-1"><strong><span class='inline-label'><%= note_struct['label'] %></span>:</strong>
       <% unless note_struct['is_inherited'].blank? %>
         <%= inheritance(note_struct['is_inherited']).html_safe %>
       <% end %>
@@ -45,10 +44,8 @@
     %>
   <% end %>
 
-  <br>
-
   <% if result['json'].has_key?('dates') || result['json'].has_key?('dates_of_existence') %>
-    <div class="dates">
+    <div class="dates pt-1">
 
       <% dates = (result['json']['dates'] || result['json']['dates_of_existence']
       ).collect { |date| parse_date(date) }.reject { |label, expression| expression.blank? } %>
@@ -58,39 +55,6 @@
       <%= dates.collect { |label, expression| label.blank? ? expression : "#{label}#{expression}" }.join('; ') %>
     </div>
   <% end %>
-
-  <br>
-
-  <% if result.resolved_repository %>
-    <div class="result_context">
-      <strong><%= t('context') %>: </strong>
-      <span class="repo_name">
-          <%= link_to result.resolved_repository.fetch('name'),
-                      app_prefix(repository_base_url(
-                                     "uri" => result.resolved_repository.fetch('uri'),
-                                     "slug" => result.resolved_repository.fetch('slug') { |s| nil })) %>
-        </span>
-
-      <% if result.respond_to?(:ancestors) && result.ancestors %>
-        <% result.ancestors.each do |ancestor| %>
-          <%= t('context_delimiter') %>
-          <span class="ancestor">
-            <% identifier = ancestor.has_key?('id_0') ? (0..3).collect { |i| ancestor["id_#{i}"] }.compact.join('-') : nil %>
-            <% title = process_mixed_content(ancestor.fetch('title', "[#{ ancestor.fetch('level', 'untitled')}]")).html_safe %>
-            <%= link_to (identifier.blank? ? title : "#{identifier}, #{title}"), app_prefix(ancestor.fetch('uri')) %>
-            </span>
-        <% end %>
-      <% else %>
-        <% unless props.fetch(:no_res, false) || result.resolved_resource.blank? %>
-          <%= t('context_delimiter') %>
-          <span class="resource_name">
-              <%= link_to process_mixed_content(result.resolved_resource.fetch('title')).html_safe, app_prefix(result.resolved_resource.fetch('uri')) %>
-            </span>
-        <% end %>
-      <% end %>
-    </div>
-  <% end %>
-
 
   <% if !props.fetch(:full, false) && result['primary_type'] == 'repository' %>
     <div><strong><%= t('number_of', {:type => t('resource._plural')}) %></strong> <%= @counts[result.uri]['resource'] %>
