@@ -31,3 +31,5 @@ en:
   navbar:
     search_placeholder: Search by keyword
     advanced_search_placeholder: Search
+
+  related_to: "Related to %{count} %{type}"

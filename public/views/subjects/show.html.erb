@@ -4,7 +4,7 @@
       <div class="col">
         <!-- Top headings-->
         <div class="row pb-1 justify-content-between">
-          <div class="col pl-6"><h2><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></h2></div>
+          <div class="col pl-6"><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
         </div>
         <div class="row pb-1 justify-content-between hidden">
           <!-- Page actions probably not needed for subjects-->
@@ -39,7 +39,7 @@
       <div class="row matrix-gutter justify-content-center">
         <div class="col-8">
           <% unless @results.blank? || @results['total_hits'] == 0 %>
-            <h3 class="pl-2"><%= t('found', {:count => @results['total_hits'], :type => @results['total_hits'] == 1? t('coll_obj._singular') : t('coll_obj._plural')}) %>:</h3>
+            <h2 class="pl-2"><%= t('related_to', {:count => @results['total_hits'], :type => @results['total_hits'] == 1? t('coll_obj._singular') : t('coll_obj._plural')}) %>:</h2>
             <hr>
             <table class="table">
               <tbody>
@@ -54,25 +54,13 @@
 
         <!-- Side bar-->
         <div class="col-3">
-          <h3><%= t('more_about') %> '<%= @result.display_string %>'</h3>
-
-          <div class="acc_holder clear">
-            <div class="accordion-group" role="tablist" id="accordion-01">
-              <% if !(terms = ASUtils.wrap(@result['json']['terms'])).empty? %>
-                <% x = render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>
-                <%= render partial: 'shared/accordion_panel', locals: {:p_title => t('subject_term_type'), :p_id => 'subject_terms', :p_body => x} %>
-              <% end %>
-              <% unless @result.external_documents.blank? %>
-                <% x = render partial: 'shared/present_list_external_docs', locals: {:list =>  @result.external_documents, :list_clss => 'external_docs'} %>
-                <%= render partial: 'shared/accordion_panel', locals: {:p_title => t('external_docs'), :p_id => 'ext_doc_list', :p_body => x} %>
-              <% end %>
-            </div>
-          </div>
-
+          <h3>Subject Term Details</h3>
+          <% if !(terms = ASUtils.wrap(@result['json']['terms'])).empty? %>
+            <%= render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>
+          <% end %>
           <br>
-
           <div id="subject-facets" <% if @facets.blank? %>class="hidden"<% end %>>
-            <h2 class="h4">Filter by:</h2>
+            <h3>Filter by:</h3>
             <div class="bg-light p-3">
               <%= render partial: 'subjects/only_facets' %>
             </div>
