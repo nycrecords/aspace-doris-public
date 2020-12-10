@@ -59,6 +59,13 @@
             <%= render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>
           <% end %>
           <br>
+          <% unless @result.external_documents.blank? %>
+            <h3>External Documents</h3>
+            <% unless @result.external_documents.blank? %>
+              <%= render partial: 'shared/present_list_external_docs', locals: {:list =>  @result.external_documents, :list_clss => 'external_docs'} %>
+            <% end %>
+          <% end %>
+          <br>
           <div id="subject-facets" <% if @facets.blank? %>class="hidden"<% end %>>
             <h3>Filter by:</h3>
             <div class="bg-light p-3">
