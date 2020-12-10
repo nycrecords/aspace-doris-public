@@ -1,10 +1,14 @@
 <% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
 <main id="skip-header-target" role="main">
   <section class="py-3 d-flex justify-content-center">
+      <%if !params[:reset]==true %>
     <div class="container-fluid mx-3 " >
       <div class="row justify-content-center">
         <div class="col-sm-8">
           <div class="row pl-2">
+      <% else %>
+    <div class="container">
+      <% end %>
             <%= render partial: 'shared/breadcrumbs' %>
             <% if defined?(@search_title) %>
               <h2><%= @search_title %></h2>
@@ -36,21 +40,20 @@
                   <div id="refineSearchPanel" class="container refinesearch" aria-hidden="true" style="display:none;">
                     <%= render partial: 'shared/search', locals: {:search_url => @base_search,
                                                                   :title => t('archive._plural'),
-                                                                  :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",''],
-                                                                                     [t('search-limit', :limit => t('search-limits.resources')),'resource'],
-                                                                                     [t('search-limit', :limit => t('search-limits.digital')),'digital_object']],
-                                                                  :field_options => [["#{t('search_results.filter.fullrecord')}",''],
+                                                                  :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",'']],
+                                                                  :field_options => [["Search By:",''],
+                                                                                     ["#{t('search_results.filter.fullrecord')}",''],
                                                                                      ["#{t('search_results.filter.title')}",'title'],
                                                                                      ["#{t('search_results.filter.creators')}",'creators_text'],
-                                                                                     ["#{t('search_results.filter.subjects')}",'subjects_text'],
-                                                                                     ["#{t('search_results.filter.notes')}", 'notes'],
                                                                                      ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
                                                                   :show_header => false } %>
                   </div>
                 </div>
               <% end %>
             <% end %>
+        <% if !params[:reset]==true %>
           </div>
+          <% end %>
           <% if defined?(@results) %>
             <a name="main" title="<%= t('internal_links.main') %>"></a>
             <div class="row py-2 pr-0">
@@ -59,7 +62,9 @@
               <% end %>
               <%= render partial: 'shared/sorter' %>
             </div>
+          <%if !params[:reset]==true %>
         </div>
+            <% end %>
         <div class="col-sm-3 ml-1"></div>
       </div>
       <div class="row justify-content-center">
@@ -72,14 +77,13 @@
                   <%= render partial: 'search/result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
                 <% end %>
               </div>
-              <div class="row pt-2">
-                <div class="col-sm-9">
-                  <%= render partial: 'shared/pagination', locals: {:pager  => @pager, :pager_id => 'paging_bottom'}  %>
-                </div>
-              </div>
             </div>
+          <div class="row pt-2 justify-content-center">
+              <%= render partial: 'shared/pagination', locals: {:pager  => @pager, :pager_id => 'paging_bottom'}  %>
+          </div>
           <% end %>
         </div>
+          <% if !params[:reset]==true %>
         <div class="col-sm-3 ml-1 ">
           <h2 class="h4">Filter by:</h2>
           <div class="bg-light p-3">
@@ -87,6 +91,10 @@
           </div>
         </div>
       </div>
+          <% end %>
     </div>
   </section>
 </main>
+<% if defined?(@reset) && @reset %>
+  <%= render partial: 'shared/appointment_banner' %>
+<% end %>

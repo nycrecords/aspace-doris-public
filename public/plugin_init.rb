@@ -265,6 +265,7 @@ Rails.application.config.after_initialize do
       Rails.logger.debug("TYPE: #{type}")
       condition = " "
       @search[:q].each_with_index do |q,i|
+        # Updated the prepended and appended html content in each condition
         condition += ''
         if i == 0
           if !@search[:op][i].blank?
@@ -283,10 +284,12 @@ Rails.application.config.after_initialize do
         condition += '&nbsp;'
         Rails.logger.debug("Condition: #{condition}")
       end
+      # Updated the :conditions and removed the html content
       @search[:search_statement] = I18n.t('search_results.search_for', :type => type,
                                           :conditions => "#{condition}")
     end
 
+    # Changed the default facet types to exclude repositories
     DEFAULT_SEARCH_FACET_TYPES = ['primary_type', 'subjects', 'published_agents','langcode']
     def search
       @repo_id = params.fetch(:rid, nil)

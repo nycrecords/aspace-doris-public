@@ -1,8 +1,9 @@
 <div class="search" role="search">
   <a name="search" id="search"></a>
-
+<%if !params[:reset]==true %>
   <section class="py-5 pb-5">
     <div class="container">
+      <% end %>
     <% @search = Search.new unless defined?(@search) %>
     <%= form_tag(app_prefix("#{search_url}"), method: 'get', :id => 'advanced_search', aria: {label: 'Search'}) do %>
       <% (0...[1, @search.q.length].max).each do |i| %>
@@ -60,7 +61,10 @@
         </div>
       </div>
     <% end %> <!-- End form tag -->
+  <%if !params[:reset]==true %>
     </div>
   </section>
+  <% end %>
 </div>
+
 <script type="text/javascript" >initialize_search();</script>
