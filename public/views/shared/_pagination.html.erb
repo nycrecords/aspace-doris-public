@@ -1,0 +1,21 @@
+<% pager_id ||= 'paging' %>
+<% if pager && pager.pages.last > 1 %>
+
+<div id="<%= pager_id %>">
+  <ul class="pagination pagination-sm">
+    <li class="page-item first"><a class="page-link" href="<%= app_prefix(pager.link) %>&page=1"><span aria-hidden="true">First</span></a></li>
+
+    <% if pager.prev > 0%>
+      <li class="page-item previous"><a class="page-link" href="<%= app_prefix(pager.link) %>&page=<%= pager.prev %>"><span aria-hidden="true">Prev</span></a></li>
+    <% end %>
+
+    <% if pager.last_page > 1 && pager.page < pager.last_page%>
+      <li class="page-item next"><a class="page-link" href="<%= app_prefix(pager.link) %>&page=<%= pager.next %>"><span aria-hidden="true">Next</span></a></li>
+    <% end %>
+
+    <% if pager.last_page > 1 %>
+      <li class="page-item"><a  class="page-link" href="<%= app_prefix(pager.link) %>&page=<%= pager.last_page %>"><span aria-hidden="true">Last</span></a></li>
+    <% end %>
+</ul>
+</div>
+<% end %>
