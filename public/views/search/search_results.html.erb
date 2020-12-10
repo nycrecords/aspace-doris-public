@@ -1,87 +1,100 @@
 <% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
-<div class="row">
-  <div class="col-sm-12">
-    <%= render partial: 'shared/breadcrumbs' %>
-    <% if defined?(@search_title) %>
-      <h2><%= @search_title %></h2>
-    <% end %>
-
-    <% if defined?(@reset) && @reset %>
-      <%= render partial: 'shared/search', locals: {:search_url => @base_search,
-                                                    :title => t('archive._plural'),
-                                                    :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",'']],
-                                                    :field_options => [["Search By:",''],
-                                                                       ["#{t('search_results.filter.fullrecord')}",''],
-                                                                       ["#{t('search_results.filter.title')}",'title'],
-                                                                       ["#{t('search_results.filter.creators')}",'creators_text'],
-                                                                       ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
-                                                    :header_size => '2',
-                                                    :show_header => true } %>
-      <%= render partial: 'shared/appointment_banner' %>
-    <% else %>
-
-      <% unless defined?(@no_statement) %>
-        <div class="searchstatement">
-          <div class="btn btn-group pull-right">
-            <%= link_to I18n.t('actions.new_search'), (defined?(@new_search) ? @new_search : root_path), :class => "btn btn-sm btn-default" %>
-            <button class="btn btn-sm btn-default" id="toggleRefineSearch" aria-expanded="false" aria-controls="refineSearchPanel"><%= I18n.t('actions.refine_search') %></button>
+<main id="skip-header-target" role="main">
+  <section class="py-3 d-flex justify-content-center">
+      <%if !params[:reset]==true %>
+    <div class="container-fluid mx-3 " >
+      <div class="row justify-content-center">
+        <div class="col-sm-8">
+          <div class="row pl-2">
+      <% else %>
+    <div class="container">
+      <% end %>
+            <%= render partial: 'shared/breadcrumbs' %>
+            <% if defined?(@search_title) %>
+              <h2><%= @search_title %></h2>
+            <% end %>
+            <% if defined?(@reset) && @reset %>
+              <%= render partial: 'shared/search', locals: {:search_url => @base_search,
+                                                            :title => t('archive._plural'),
+                                                            :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",'']],
+                                                            :field_options => [["Search By:",''],
+                                                                               ["#{t('search_results.filter.fullrecord')}",''],
+                                                                               ["#{t('search_results.filter.title')}",'title'],
+                                                                               ["#{t('search_results.filter.creators')}",'creators_text'],
+                                                                               ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
+                                                            :header_size => '2',
+                                                            :show_header => true } %>
+            <% else %>
+              <% unless defined?(@no_statement) %>
+                <div class="searchstatement row w-100">
+                  <% if defined?(@results) %>
+                    <h2 class="col-6 pt-1" ><%= t('search_results.results_head', {:type => results_type, :start => @results['offset_first'],
+                                                                                  :end => @results['offset_last'], :total => @results['total_hits'] })  %></h2>
+                  <% end %>
+                  <div class="col-3 pt-2">
+                    <%= render partial: 'shared/pagination', locals: {:pager  => @pager}  %>
+                  </div>
+                  <div class="btn btn-group col-3 pr-1">
+                    <button class="btn btn-primary" id="toggleRefineSearch" aria-expanded="false" aria-controls="refineSearchPanel"><%= I18n.t('actions.refine_search') %></button>
+                  </div>
+                  <div id="refineSearchPanel" class="container refinesearch" aria-hidden="true" style="display:none;">
+                    <%= render partial: 'shared/search', locals: {:search_url => @base_search,
+                                                                  :title => t('archive._plural'),
+                                                                  :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",'']],
+                                                                  :field_options => [["Search By:",''],
+                                                                                     ["#{t('search_results.filter.fullrecord')}",''],
+                                                                                     ["#{t('search_results.filter.title')}",'title'],
+                                                                                     ["#{t('search_results.filter.creators')}",'creators_text'],
+                                                                                     ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
+                                                                  :show_header => false } %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+        <% if !params[:reset]==true %>
           </div>
-
-          <% if defined?(@search) %>
-            <%= @search[:search_statement].html_safe %>
           <% end %>
-
-          <div id="refineSearchPanel" class="container refinesearch" aria-hidden="true" style="display:none;">
-            <%= render partial: 'shared/search', locals: {:search_url => @base_search,
-                                                          :title => t('archive._plural'),
-                                                          :limit_options => [["#{t('actions.search')} #{t('search-limits.all')}",''],
-                                                                             [t('search-limit', :limit => t('search-limits.resources')),'resource'],
-                                                                             [t('search-limit', :limit => t('search-limits.digital')),'digital_object']],
-                                                          :field_options => [["#{t('search_results.filter.fullrecord')}",''],
-                                                                             ["#{t('search_results.filter.title')}",'title'],
-                                                                             ["#{t('search_results.filter.creators')}",'creators_text'],
-                                                                             ["#{t('search_results.filter.subjects')}",'subjects_text'],
-                                                                             ["#{t('search_results.filter.notes')}", 'notes'],
-                                                                             ["#{t('search_results.filter.identifier')}", 'four_part_id'] ],
-                                                          :show_header => false } %>
+          <% if defined?(@results) %>
+            <a name="main" title="<%= t('internal_links.main') %>"></a>
+            <div class="row py-2 pr-0">
+              <% if defined?(@search) %>
+                <div class="mx-0 pt-2 pl-2 align-text-bottom"><%= @search[:search_statement].html_safe %></div>
+              <% end %>
+              <%= render partial: 'shared/sorter' %>
+            </div>
+          <%if !params[:reset]==true %>
+        </div>
+            <% end %>
+        <div class="col-sm-3 ml-1"></div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <hr/>
+            <div class="row search-results">
+              <div class="col-sm-12">
+              <a name="searchresults" id="searchresults"></a>
+                <% @results.records.each do |result| %>
+                  <%= render partial: 'search/result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
+                <% end %>
+              </div>
+            </div>
+          <div class="row pt-2 justify-content-center">
+              <%= render partial: 'shared/pagination', locals: {:pager  => @pager, :pager_id => 'paging_bottom'}  %>
+          </div>
+          <% end %>
+        </div>
+          <% if !params[:reset]==true %>
+        <div class="col-sm-3 ml-1 ">
+          <h2 class="h4">Filter by:</h2>
+          <div class="bg-light p-3">
+            <%= render partial: 'search/only_facets' %>
           </div>
         </div>
-      <% end %>
-
-      <% if defined?(@results) %>
-        <h2><%= t('search_results.results_head', {:type => results_type, :start => @results['offset_first'],
-                                                  :end => @results['offset_last'], :total => @results['total_hits'] })  %></h2>
-      <% end %>
-    <% end %>
-  </div>
-</div>
-
-<% if defined?(@results) %>
-  <div class="row">
-    <div class="col-sm-9">
-      <a name="main" title="<%= t('internal_links.main') %>"></a>
-      <div class="row"><div class="col-sm-8">
-        <%= render partial: 'shared/pagination', locals: {:pager  => @pager}  %>
       </div>
-        <%= render partial: 'shared/sorter' %>
-
-      </div>
-      <div class="row search-results"><div class="col-sm-12">
-
-        <a name="searchresults" id="searchresults"></a>
-
-        <% @results.records.each do |result| %>
-          <%= render partial: 'shared/result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
-        <% end %>
-      </div></div>
-      <div class="row"><div class="col-sm-9">
-        <%= render partial: 'shared/pagination', locals: {:pager  => @pager, :pager_id => 'paging_bottom'}  %>
-      </div></div>
+          <% end %>
     </div>
-    <div class="col-sm-3">
-      <a name="filter" title="<%= t('internal_links.filter') %>"></a>
-      <%= render partial: 'shared/facets' %>
-    </div>
-
-  </div>
+  </section>
+</main>
+<% if defined?(@reset) && @reset %>
+  <%= render partial: 'shared/appointment_banner' %>
 <% end %>
