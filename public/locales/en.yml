@@ -32,6 +32,8 @@ en:
     search_placeholder: Search by keyword
     advanced_search_placeholder: Search
 
+  related_to: "Related to %{count} %{type}"
+
   search_results:
     search_for: "Search%{conditions}"
     keyword_contain: "&nbsp;Keyword(s): <span class='searchterm'><strong>%{kw}</strong></span>"

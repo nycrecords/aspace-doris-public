@@ -1,0 +1,79 @@
+<main id="skip-header-target" role="main">
+  <section class="py-3 d-flex justify-content-center">
+    <div class="container-fluid mx-3">
+      <div class="col">
+        <!-- Top headings-->
+        <div class="row pb-1 justify-content-between">
+          <div class="col pl-5"><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
+        </div>
+        <div class="row pb-1 justify-content-between hidden">
+          <!-- Page actions probably not needed for subjects-->
+          <div class="col pl-5"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
+        </div>
+        <div class="row pb-1 justify-content-between">
+          <div class="col pl-5"><span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}" ) %></div>
+        </div>
+
+        <% if !@result.dates.blank? %>
+          <% render partial: 'shared/dates', locals: {:dates => @result.dates} %>
+        <% end %>
+
+        <% if !@result['json']['component_id'].blank? %>
+          <span class='component'><%= t(component._singular) %>: <%= @result['json']['component_id'] %></span>
+        <% end %>
+        <% if !@result['json']['ref_id'].blank? %>
+          <span class='ref_id'>[Ref. ID: <%= @result['json']['ref_id'] %>]</span>
+        <% end %>
+        <% if @result['json']['scope_note'].present? %>
+          <div class="row pb-1 justify-content-between">
+            <div class="col pl-5">
+              <span class="inline-label"><strong><%= t('scope_note') %>
+                : </strong></span> <%= process_mixed_content(@result['json']['scope_note']).html_safe %>
+            </div>
+          </div>
+        <% end %>
+        <%= render partial: 'shared/display_notes' %>
+      </div>
+
+      <!-- Table rows -->
+      <div class="row matrix-gutter justify-content-center">
+        <div class="col-8">
+          <% unless @results.blank? || @results['total_hits'] == 0 %>
+            <table class="table">
+              <tbody>
+              <% @results.records.each do |result| %>
+                <%= render partial: 'subjects/result', locals: {:result => result, :props => {:full => false}} %>
+              <% end %>
+              </tbody>
+            </table>
+            <%= render partial: 'shared/pagination', locals: {:pager  => @pager}  %>
+          <% end %>
+        </div>
+
+        <!-- Side bar-->
+        <div class="col-3">
+          <h3>Subject Term Details</h3>
+          <% if !(terms = ASUtils.wrap(@result['json']['terms'])).empty? %>
+            <%= render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>
+          <% end %>
+          <br>
+          <% unless @result.external_documents.blank? %>
+            <h3>External Documents</h3>
+            <% unless @result.external_documents.blank? %>
+              <%= render partial: 'shared/present_list_external_docs', locals: {:list =>  @result.external_documents, :list_clss => 'external_docs'} %>
+            <% end %>
+          <% end %>
+          <br>
+          <div id="subject-facets" <% if @facets.blank? %>class="hidden"<% end %>>
+            <h3>Filter by:</h3>
+            <div class="bg-light p-3">
+              <%= render partial: 'subjects/only_facets' %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- .row -->
+    </div>
+    <!-- .container -->
+  </section>
+</main>
