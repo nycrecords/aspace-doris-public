@@ -253,5 +253,94 @@ Rails.application.config.after_initialize do
       @criteria['facet[]'] = @facet_filter.get_facet_types
       @search[:limit].blank? ? @criteria['page_size'] = params.fetch(:page_size, AppConfig[:pui_global_search_results_page_size]) : @criteria['page_size'] = params.fetch(:page_size, AppConfig[:pui_search_results_page_size])
     end
+
+    # creates the html-ized search statement
+    def set_search_statement
+      rid = defined?(@repo_id) ? @repo_id : nil
+      #    Pry::ColorPrinter.pp @search
+      l = @search[:limit].blank? ? 'all' : @search[:limit]
+      type = "<strong> #{I18n.t("search-limits.#{l}")}</strong>"
+      type += I18n.t('search_results.in_repository', :name =>  CGI::escapeHTML(get_pretty_facet_value('repository', "/repositories/#{rid}"))) if rid
+
+      Rails.logger.debug("TYPE: #{type}")
+      condition = " "
+      @search[:q].each_with_index do |q,i|
+        # Updated the prepended and appended html content in each condition
+        condition += ''
+        if i == 0
+          if !@search[:op][i].blank?
+            condition += I18n.t("search_results.op_first_row.#{@search[:op][i]}", :default => "")
+          end
+        else
+          condition += I18n.t("search_results.op.#{@search[:op][i]}", :default => "")
+        end
+        f = @search[:field][i].blank? ? 'keyword' : @search[:field][i]
+        condition += ' ' + I18n.t("search_results.#{f}_contain", :kw =>  CGI::escapeHTML((q == '*' ? I18n.t('search_results.anything') : q)) )
+        unless @search[:from_year][i].blank? &&  @search[:to_year][i].blank?
+          from_year = @search[:from_year][i].blank? ? I18n.t('search_results.filter.year_begin') : @search[:from_year][i]
+          to_year =  @search[:to_year][i].blank? ? I18n.t('search_results.filter.year_now') : @search[:to_year][i]
+          condition += ' ' + I18n.t('search_results.filter.from_to', :begin => "<strong>#{from_year}</strong>", :end => "<strong>#{to_year}</strong>")
+        end
+        condition += '&nbsp;'
+        Rails.logger.debug("Condition: #{condition}")
+      end
+      # Updated the :conditions and removed the html content
+      @search[:search_statement] = I18n.t('search_results.search_for', :type => type,
+                                          :conditions => "#{condition}")
+    end
+
+    # Changed the default facet types to exclude repositories
+    DEFAULT_SEARCH_FACET_TYPES = ['primary_type', 'subjects', 'published_agents','langcode']
+    def search
+      @repo_id = params.fetch(:rid, nil)
+      repo_url = "/repositories/#{@repo_id}"
+      @base_search =  @repo_id ? "#{repo_url}/search?" : '/search?'
+      fallback_location = @repo_id ? app_prefix(repo_url) : app_prefix('/search?reset=true');
+      @new_search = fallback_location
+
+      if params[:reset] == 'true'
+        @reset = true
+        params[:rid] = nil
+        @search = Search.new(params)
+        return render 'search/search_results'
+      end
+
+      search_opts = default_search_opts(DEFAULT_SEARCH_OPTS)
+      search_opts['fq'] = ["repository:\"#{repo_url}\" OR used_within_published_repository::\"#{repo_url}\""] if @repo_id
+      begin
+        set_up_advanced_search(DEFAULT_TYPES, DEFAULT_SEARCH_FACET_TYPES, search_opts, params)
+        #NOTE the redirect back here on error!
+      rescue Exception => error
+        Rails.logger.debug(error.message)
+        p error
+        flash[:error] = I18n.t('search_results.error')
+        redirect_back(fallback_location: root_path ) and return
+      end
+      page = Integer(params.fetch(:page, "1"))
+      Rails.logger.debug("base search: #{@base_search}")
+      Rails.logger.debug("query: #{@query}")
+
+      @results = archivesspace.advanced_search(@base_search, page, @criteria)
+      @counts = archivesspace.get_types_counts(DEFAULT_TYPES)
+      if @results['total_hits'].blank? ||  @results['total_hits'] == 0
+        flash[:notice] = I18n.t('search_results.no_results')
+        fallback_location = URI(fallback_location)
+        fallback_location.query = URI(@base_search).query + "&reset=true"
+        redirect_to(fallback_location.to_s)
+      else
+        process_search_results(@base_search)
+        if @results['total_hits'] > 1
+          @search[:dates_within] = true if params.fetch(:filter_from_year,'').blank? && params.fetch(:filter_to_year,'').blank?
+          @search[:text_within] = true
+        end
+        @sort_opts = []
+        all_sorts = Search.get_sort_opts
+        all_sorts.keys.each do |type|
+          @sort_opts.push(all_sorts[type])
+        end
+        render 'search/search_results'
+      end
+    end
+
   end
 end
