@@ -49,6 +49,11 @@
 <%= (props.fetch(:full,false)? '</h1>' : '</h3>').html_safe %>
 
 <div class="badge-and-identifier">
+  <% if props.fetch(:full, false) %>
+    <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %>">
+      <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %> <% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %><% end %>
+    </div>
+  <% end %>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <% unless comp_id.blank? %>
     <div class="identifier">
