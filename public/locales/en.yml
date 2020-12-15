@@ -50,3 +50,5 @@ en:
     op_first_row:
       NOT: Not
     results_head: "%{start} - %{end} of %{total} %{type}"
+  actions:
+    collection_overview: Overview

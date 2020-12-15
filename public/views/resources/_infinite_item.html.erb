@@ -19,7 +19,7 @@
   <% if indent_level < 2 %>
     <div class="row pt-2">
       <% unless @result.extents.blank? || all_inherited?(@result.extents) %>
-        <div class="col-lg-9">
+        <div class="col-lg-6">
           <h5><%= t('resource._public.extent') %></h5>
           <% @result.extents.each do |extent| %>
             <p>
@@ -31,7 +31,7 @@
       <% end %>
 
       <% unless @result.dates.blank? || all_inherited?(@result.dates) %>
-        <div class="col-lg-3">
+        <div class="col-lg-6">
           <h5><%= t('resource._public.dates') %></h5>
             <% @result.dates.each do |date| %>
             <p>
@@ -44,7 +44,7 @@
     </div>
   <%end %>
 
-  <div class="row pt-2">
+  <div  class="row pt-2">
     <div class="col-lg">
       <% unless @result.agents.blank? || all_inherited?(@result.agents.collect(&:last).flatten) %>
         <h5>Creators</h5>
@@ -61,6 +61,7 @@
   </div>
 
   <%if indent_level==1 %>
-    <h5 class="pb-2">Contents</h5>
+    <h5 class="pb-2" class="content">Contents</h5>
   <%end %>
 </div>
+

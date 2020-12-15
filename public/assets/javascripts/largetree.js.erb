@@ -739,16 +739,14 @@
                 row.css('height','auto')
                 var title = row.find('.title');
                 var strippedTitle = $("<div>").html(node.title).text();
-                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title));
+                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title)).addClass('text-justify');
                 title.attr('title', strippedTitle);
 
                 var ex = row.find('.expandme');
                 ex.attr('aria-label', 'expand element');
                 if (node.child_count === 0) {
-//                    ex.css('visibility', 'hidden');
-                    row.css('color','black');
-                    ex.attr('aria-hidden', 'true');
-                    ex.css('padding-left','10px');
+                    row.find('.record-title').addClass('p-1');
+                    row.find('.indentor').remove();
                 }
 
                 self.renderer.add_node_columns(row, node);

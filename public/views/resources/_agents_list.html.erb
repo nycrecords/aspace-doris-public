@@ -1,6 +1,12 @@
 <% list.each do |role, relationships| %>
+  <h4 class="pt-1">
+    <% if role=='creator'&& relationships.count>1%>
+      Creators
+      <% else %>
+    <%= I18n.t("enumerations.linked_agent_role.#{role}", :default => role) %>
+      <% end %>
+      </h4>
 
-  <h4 class="pt-1"><%= I18n.t("enumerations.linked_agent_role.#{role}", :default => role) %></h4>
   <ul class="present_list agents_list">
 
     <% relationships.each do |relationship| %>
