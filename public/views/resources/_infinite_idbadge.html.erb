@@ -50,7 +50,7 @@
         <%if indent_level!= 0 %>
           <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
           <% unless comp_id.blank? %>
-            <%= badge_label %> <%=comp_id %> :
+            <%= badge_label %> <%=comp_id %>:
           <% end %>
         <% end %>
         <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>

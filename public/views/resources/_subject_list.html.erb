@@ -3,7 +3,7 @@
   <!--      Handling subjects-->
   <%if !item['terms'].nil? %>
     <%item['terms'].take(1).each do |t_type|%>
-      <%subjects_list[t_type['term_type']] << [t_type['term'],item['uri']]%>
+      <%subjects_list[t_type['term_type']] << [item['title'],item['uri']]%>
     <% end %>
 <!--        Handling Names listed as subjects(Agent links)-->
   <% else %>
