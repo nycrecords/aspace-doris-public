@@ -1,0 +1,55 @@
+<main id="skip-header-target" role="main">
+  <section class="py-3">
+    <div class="container description">
+      <div class="col">
+        <!-- Top headings -->
+        <div class="row pb-2 justify-content-between">
+          <div class="col"><%= render partial: 'accessions/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
+        </div>
+        <div class="row pb-1 justify-content-between hidden">
+          <!-- Page actions probably not needed for accessions -->
+          <div class="col"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
+        </div>
+
+        <!-- Classifications (Records Groups) -->
+        <% unless @result.classifications.blank? %>
+          <% @result.classifications.each do |classification| %>
+            <div class="row pb-2 justify-content-between">
+              <div class="col">
+                <a href="<%= classification['uri'] %>"><%= classification['title'] %></a>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+
+        <hr>
+
+        <div class="row pt-1 pb-1 justify-content-between">
+          <div class="col">
+            <h2><%= t('accession._public.section.description') %></h2>
+            <p><%= @result.content_description %></p>
+          </div>
+        </div>
+
+        <%= render partial: 'accessions/record_innards' %>
+
+        <hr>
+
+        <div class="row pt-2 pb-2 justify-content-between">
+          <div class="col">
+            <h2>Access to Unprocessed Archival Collections</h2>
+            <p id="unprocessed-note">
+              Access to Unprocessed Archival Collections
+              Unprocessed collections may include protected information related to personal privacy, health information,
+              and minors, as well as attorney-client privilege. In accordance with laws and regulations, this material
+              will be reviewed prior to providing public access and certain records may be subject to redaction or other
+              measures that restrict access. Archival and library collections may also be restricted based on physical
+              condition.</p>
+          </div>
+        </div>
+      </div>
+      <%= render partial: 'shared/modal_actions' %>
+    </div>
+    <!-- .container -->
+  </section>
+</main>
