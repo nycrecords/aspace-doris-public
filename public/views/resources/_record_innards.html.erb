@@ -20,7 +20,7 @@
 					<h4 class="pt-1"><%= t('resource._public.extent') %></h4>
 					<% @result.extents.each do |ext| %>
 						<p class="extent"><%= inheritance(ext['_inherited']).html_safe %>
-							<%= ext['display']%>
+							<%= ext['display'].downcase%>
 						</p>
 					<% end %>
 			<% end %>

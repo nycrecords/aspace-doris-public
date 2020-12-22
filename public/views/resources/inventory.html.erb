@@ -1,9 +1,8 @@
 <main id="skip-header-target" role="main">
-  <section class="py-3">
-    <div class="container description">
+  <section class="py-3 justify-content-center">
+    <div class="container-flex description mx-6 ">
 
       <%= render partial: 'resources/idbadge', locals: {:result => @result, :props => { :full => true} } %>
-      <hr/>
 
       <%= render partial: 'resources/resource_alltabs' %>
       <%@results.records.sort_by!{|record| [record.display_string]}%>

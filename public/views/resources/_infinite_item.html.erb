@@ -24,7 +24,7 @@
           <% @result.extents.each do |extent| %>
             <p>
               <%= inheritance(extent['_inherited']).html_safe %>
-              <%= extent['display']%>
+              <%= extent['display'].downcase%>
             </p>
           <% end %>
         </div>
@@ -59,9 +59,5 @@
       <% end %>
     </div>
   </div>
-
-  <%if indent_level==1 %>
-    <h5 class="pb-2" class="content">Contents</h5>
-  <%end %>
 </div>
 
