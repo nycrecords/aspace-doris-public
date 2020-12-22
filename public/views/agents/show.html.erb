@@ -13,7 +13,6 @@
         <div class="row pb-1 justify-content-between">
           <% if !@result.dates.blank? %>
             <div class="col pl-5">
-              <span><strong><%= t('agent._public.section.dates_of_existence') %></strong></span>
               <%= render partial: 'shared/dates', locals: {:dates => @result.dates} %>
             </div>
           <% end %>
