@@ -52,3 +52,4 @@ en:
     results_head: "%{start} - %{end} of %{total} %{type}"
   actions:
     collection_overview: Overview
+  cont_arr: Collection Organization

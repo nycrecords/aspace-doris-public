@@ -1,13 +1,12 @@
 <a name="main" title="<%= t('internal_links.main') %>"></a>
 <main id="skip-header-target" role="main">
-  <section class="py-3">
+  <section class="py-3 justify-content-center">
 
-    <div class="container description">
+    <div class="container-flex mx-6 description">
 
       <div class="information col-sm-7">
       <%= render partial: 'resources/idbadge', locals: {:result => @result, :props => { :full => true} } %>
       </div>
-      <hr/>
 
       <%= render partial: 'resources/resource_alltabs' %>
 

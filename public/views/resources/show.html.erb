@@ -1,8 +1,9 @@
  <main id="skip-header-target" role="main">
-    <section class="py-3">
-      <div class="container description">
-        <%= render partial: 'resources/idbadge', locals: {:result => @result, :props => { :full => true} } %>
-        <hr/>
+    <section class="py-3 d-flex justify-content-center">
+      <div class="container-fluid mx-3 description">
+        <%= render partial: 'resources/idbadge', locals: {:result => @result,:props => { :full => true},:pad =>true } %>
+
+        <div class="row px-5 matrix-gutter justify-content-center">
         <%= render partial: 'resources/resource_alltabs' %>
 
         <div class="row" id="notes_row">
@@ -18,6 +19,7 @@
           </div>
         </div>
         <%= render partial: 'shared/modal_actions' %>
+        </div>
       </div>
     </section>
   </main>

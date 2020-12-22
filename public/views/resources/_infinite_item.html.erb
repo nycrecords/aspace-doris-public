@@ -24,7 +24,7 @@
           <% @result.extents.each do |extent| %>
             <p>
               <%= inheritance(extent['_inherited']).html_safe %>
-              <%= extent['display']%>
+              <%= extent['display'].downcase%>
             </p>
           <% end %>
         </div>
