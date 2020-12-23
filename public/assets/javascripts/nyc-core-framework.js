@@ -151,8 +151,46 @@ $('#collection_year').click(function(){
     else {
         $("#sort option[value='year_sort desc']").attr("selected", "selected");
         $("#sort option[value='year_sort asc']").removeAttr("selected");
-        $("#year-sort-icon").attr("class","fa fa-lg fa-caret-down");
+        $("#year-sort-icon").attr("class", "fa fa-lg fa-caret-down");
         $("#sort_form").submit();
-
     }
+    });
+
+    // Display classifications in ascending/descending order
+    $('#classification_title').click(function(){
+        var isSelected = $("#sort option[value='title_sort desc']").attr("selected");
+        //Sort classifications by title in ascending order
+        if (typeof isSelected !== typeof undefined && isSelected !== false)
+        {
+            $("#sort option[value='title_sort asc']").attr("selected","selected");
+            $("#sort option[value='title_sort desc']").removeAttr("selected");
+            $("#sort_form").submit();
+        }
+        //Sort classifications by title in descending order
+        else
+        {
+            $("#sort option[value='title_sort desc']").attr("selected","selected");
+            $("#sort option[value='title_sort asc']").removeAttr("selected");
+            $("#sort_form").submit();
+        }
+    });
+//Sort classifications by identifier in descending order
+    $('#classification_id').click(function(){
+        var isSelected = $("#sort option[value='identifier_sort desc, repo_sort desc, title_sort desc']").attr("selected");
+        //Sort classifications by identifiers in ascending order
+
+        if (typeof isSelected !== typeof undefined && isSelected !== false) {
+            $("#sort option[value='identifier_sort asc, repo_sort asc, title_sort asc']").attr("selected", "selected");
+            $("#sort option[value='identifier_sort desc, repo_sort desc, title_sort desc']").removeAttr("selected");
+            $("#sort_form").submit();
+            //$("#-sort-icon").attr("class","fa fa-lg fa-caret-up");
+        }
+        //Sort classifications by identifier in descending order
+        else {
+            $("#sort option[value='identifier_sort desc, repo_sort desc, title_sort desc']").attr("selected", "selected");
+            $("#sort option[value='identifier_sort asc, repo_sort asc, title_sort asc']").removeAttr("selected");
+           // $("#year-sort-icon").attr("class","fa fa-lg fa-caret-down");
+            $("#sort_form").submit();
+
+        }
 });
