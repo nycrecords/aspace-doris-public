@@ -1,43 +1,41 @@
 <main id="skip-header-target" role="main">
   <section class="py-3 d-flex justify-content-center">
     <div class="container-fluid mx-3">
-      <div class="col">
-        <!-- Top headings-->
-        <div class="row pb-1 justify-content-between">
-          <div class="col pl-5"><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
-        </div>
-        <div class="row pb-1 justify-content-between hidden">
+      <div class="row matrix-gutter justify-content-center">
+        <div class="col-8">
+          <!-- Top headings -->
+          <div class="col pb-1"><%= render partial: 'shared/idbadge', locals: {:result => @result, :props => {:full => true}} %></div>
           <!-- Page actions probably not needed for subjects-->
-          <div class="col pl-5"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
-        </div>
-        <div class="row pb-1 justify-content-between">
-          <div class="col pl-5"><span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}" ) %></div>
-        </div>
+          <div class="col pb-1 hidden"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath} %></div>
+          <div class="col <% if @result['json']['scope_note'].present? %>pb-1"<% end %>>
+            <span class="inline-label clear"><strong><%= t('enumeration_names.subject_source') %></strong>: </span><%= t("enumerations.subject_source.#{@result['json']['source']}") %>
+          </div>
 
-        <% if !@result.dates.blank? %>
-          <% render partial: 'shared/dates', locals: {:dates => @result.dates} %>
-        <% end %>
+          <% if !@result.dates.blank? %>
+            <% render partial: 'shared/dates', locals: {:dates => @result.dates} %>
+          <% end %>
 
-        <% if !@result['json']['component_id'].blank? %>
-          <span class='component'><%= t(component._singular) %>: <%= @result['json']['component_id'] %></span>
-        <% end %>
-        <% if !@result['json']['ref_id'].blank? %>
-          <span class='ref_id'>[Ref. ID: <%= @result['json']['ref_id'] %>]</span>
-        <% end %>
-        <% if @result['json']['scope_note'].present? %>
-          <div class="row pb-1 justify-content-between">
-            <div class="col pl-5">
+          <% if !@result['json']['component_id'].blank? %>
+            <span class='component'><%= t(component._singular) %>: <%= @result['json']['component_id'] %></span>
+          <% end %>
+          <% if !@result['json']['ref_id'].blank? %>
+            <span class='ref_id'>[Ref. ID: <%= @result['json']['ref_id'] %>]</span>
+          <% end %>
+          <% if @result['json']['scope_note'].present? %>
+            <div class="col">
               <span class="inline-label"><strong><%= t('scope_note') %>
                 : </strong></span> <%= process_mixed_content(@result['json']['scope_note']).html_safe %>
             </div>
-          </div>
-        <% end %>
-        <%= render partial: 'shared/display_notes' %>
-      </div>
+          <% end %>
+          <%= render partial: 'shared/display_notes' %>
+        </div>
 
-      <!-- Table rows -->
-      <div class="row matrix-gutter justify-content-center">
+        <div class="col-3">
+          <!-- Placeholder column to align margins -->
+        </div>
+
         <div class="col-8">
+          <!-- Table rows -->
           <% unless @results.blank? || @results['total_hits'] == 0 %>
             <table class="table">
               <tbody>
