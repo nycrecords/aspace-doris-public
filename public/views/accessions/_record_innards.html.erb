@@ -12,7 +12,7 @@
     <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => over} %>
   <% end %>
 
-  <div class="row pt-2 pb-2">
+  <div class="row col pt-2 pb-2">
     <div class="col-6">
       <% unless @result.extents.blank? %>
         <h3><%= t('resource._public.extent') %></h3>
@@ -46,25 +46,29 @@
   <% end unless @result.agents['creator'].blank? %>
 
   <% unless sources.blank? and creators.blank? %>
-    <div class="row pt-2 pb-2">
+    <div class="row col pt-2 pb-2">
       <div class="col-12 pb-2">
         <h2>Names</h2>
       </div>
       <% unless sources.blank? %>
         <div class="col-6">
           <h3>Source</h3>
-          <% sources.each do |source| %>
-            <span class="fa fa-user">&nbsp;</span><a href="<%= source[:uri] %>"><%= source[:title] %></a><br>
-          <% end %>
+          <ul class="unstyled-list">
+            <% sources.each do |source| %>
+              <li class="pb-2"><span class="fa fa-user">&nbsp;</span><a href="<%= source[:uri] %>"><%= source[:title] %></a></li>
+            <% end %>
+          </ul>
         </div>
       <% end %>
 
       <% unless creators.blank? %>
         <div class="col-6">
           <h3>Creators</h3>
-          <% creators.each do |creator| %>
-            <span class="fa fa-university">&nbsp;</span><a href="<%= creator[:uri] %>"><%= creator[:title] %></a><br>
+          <ul class="unstyled-list">
+            <% creators.each do |creator| %>
+              <li class="pb-1"><span class="fa fa-university">&nbsp;</span><a href="<%= creator[:uri] %>"><%= creator[:title] %></a></li>
           <% end %>
+          </ul>
         </div>
       <% end %>
     </div>
