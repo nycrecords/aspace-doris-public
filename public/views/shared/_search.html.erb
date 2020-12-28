@@ -9,7 +9,7 @@
       <% (0...[1, @search.q.length].max).each do |i| %>
         <div class="row search_row pb-3 matrix-gutter" id="search_row_<%= i %>">
           <!-- Additional term operators -->
-          <div class="col-sm-1 bool form-group">
+          <div class="col-sm-2 bool form-group">
             <%= label_tag("op#{i}", t('advanced_search.operator_label'), :class => 'sr-only') %>
             <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][i]), disabled: (i == 0), :id => "op#{i}",:class=> 'form-control' + (i == 0 ? ' hidden' : '')) %>
             <%= hidden_field_tag('op[]','', :id => 'op_') if i == 0 %>
@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <div class="col-sm py-3 pl-3">
+          <div class="col-sm-2 py-3 pl-3">
             <span class="plusminus"></span>
           </div>
         </div>

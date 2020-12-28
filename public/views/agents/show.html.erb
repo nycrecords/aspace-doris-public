@@ -1,30 +1,27 @@
 <main id="skip-header-target" role="main">
   <section class="py-3 d-flex justify-content-center">
     <div class="container-fluid mx-3">
-      <div class="col">
-        <!-- Top headings -->
-        <div class="row pb-1 justify-content-between">
-          <div class="col pl-5"><%= render partial: 'agents/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
-        </div>
-        <div class="row pb-1 justify-content-between hidden">
-          <!-- Page actions probably not needed for names -->
-          <div class="col pl-5"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
-        </div>
-        <div class="row pb-1 justify-content-between">
-          <% if !@result.dates.blank? %>
-            <div class="col pl-5">
-              <span><strong><%= t('agent._public.section.dates_of_existence') %></strong></span>
-              <%= render partial: 'shared/dates', locals: {:dates => @result.dates} %>
-            </div>
-          <% end %>
-        </div>
-
-        <%= render partial: 'shared/display_notes' %>
-      </div>
-
-      <!-- Table rows -->
       <div class="row matrix-gutter justify-content-center">
         <div class="col-8">
+            <!-- Top headings -->
+            <div class="col pb-1"><%= render partial: 'agents/idbadge', locals: {:result => @result, :props => {:full => true}} %></div>
+            <!-- Page actions probably not needed for names -->
+            <div class="col pb-1 hidden"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath} %></div>
+            <% if !@result.dates.blank? %>
+              <div class="col">
+                <%= render partial: 'shared/dates', locals: {:dates => @result.dates} %>
+              </div>
+            <% end %>
+
+            <%= render partial: 'shared/display_notes' %>
+        </div>
+
+        <div class="col-3">
+          <!-- Placeholder column to fix margins -->
+        </div>
+
+        <div class="col-8">
+          <!-- Table rows -->
           <% unless @results.blank? || @results['total_hits'] == 0 %>
             <table class="table">
               <tbody>
