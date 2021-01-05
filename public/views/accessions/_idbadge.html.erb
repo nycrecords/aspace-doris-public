@@ -44,7 +44,7 @@
     <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
   </a>
 <% else %>
-  <%== result.display_string %>
+  <h1 class="h2"><%== result.display_string %></h1>
 <% end %>
 <%= (props.fetch(:full,false)? '</h1>' : '</h3>').html_safe %>
 
@@ -53,7 +53,13 @@
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <% unless comp_id.blank? %>
     <div class="identifier">
-      <span><small><strong>Accession <%= comp_id %> <%= badge_label %>. See <a href="#unprocessed-note">Unprocessed Collections note</a></strong></small></span>
+      <span>
+        <strong>Accession <%= comp_id %>. <a href="#unprocessed-note">Unprocessed</a></strong>
+        <!-- Display the first record group if it exists -->
+        <% unless @result.classifications.blank? %>
+        - <a href="<%= @result.classifications[0]['uri'] %>"><%= @result.classifications[0]['title'] %></a>
+        <% end %>
+      </span>
     </div>
   <% end %>
 </div>
