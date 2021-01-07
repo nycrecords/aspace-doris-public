@@ -36,13 +36,13 @@ en:
 
   search_results:
     search_for: "Search%{conditions}"
-    keyword_contain: "&nbsp;Keyword(s): <span class='searchterm'><strong>%{kw}</strong></span>"
-    title_contain: "&nbsp;Title: <span class='searchterm'><strong>%{kw}</strong></span>"
-    notes_contain: "&nbsp;Note: <span class='searchterm'><strong>%{kw}</strong></span>"
-    creators_text_contain: "&nbsp;Creator: <span class='searchterm'><strong>%{kw}</strong></span>"
-    subjects_text_contain: "&nbsp;Subject: <span class='searchterm'><strong>%{kw}</strong></span>"
-    identifier_contain: "&nbsp;Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
-    four_part_id_contain: "&nbsp;Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
+    keyword_contain: "Keyword(s): <span class='searchterm'><strong>%{kw}</strong></span>"
+    title_contain: "Title: <span class='searchterm'><strong>%{kw}</strong></span>"
+    notes_contain: "Note: <span class='searchterm'><strong>%{kw}</strong></span>"
+    creators_text_contain: "Creator: <span class='searchterm'><strong>%{kw}</strong></span>"
+    subjects_text_contain: "Subject: <span class='searchterm'><strong>%{kw}</strong></span>"
+    identifier_contain: "Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
+    four_part_id_contain: "Identifier: <span class='searchterm'><strong>%{kw}</strong></span>"
     op:
       AND: and
       OR: or
@@ -52,4 +52,8 @@ en:
     results_head: "%{start} - %{end} of %{total} %{type}"
   actions:
     collection_overview: Overview
+
+  accession:
+    description: Description
+
   cont_arr: Collection Organization

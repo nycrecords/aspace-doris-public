@@ -180,7 +180,7 @@
                                                     accessions_idxs.push(i);
                                                 }
                                             }
-                                            subgroup.innerHTML += "<li class='pt-1'><h5> Subgroup " + info['identifier'] + " " + info['title'] + "</h5>\n";
+                                            subgroup.innerHTML += "<li class='pt-1' id=\"" + identifier + "\"><h5> Subgroup " + info['identifier'] + " " + info['title'] + "</h5>\n";
                                             //Creating accordion for collection linked records
                                             if (collection_idxs.length > 0) {
                                                 <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>

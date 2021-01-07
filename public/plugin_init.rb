@@ -395,13 +395,40 @@ Rails.application.config.after_initialize do
 
     end
 
-    #Method to fetch raw data for classification terms
+    # Method to fetch raw data for classification terms
     def term_json
       begin
         uri = "/repositories/#{params[:rid]}/classification_terms/#{params[:id]}"
         render json: archivesspace.get_raw_record(uri)
       rescue RecordNotFound
         record_not_found(uri, 'classification_term')
+      end
+    end
+
+    def linked_records
+      begin
+        resources = []
+        accessions = []
+        params[:classifications].each do |classification|
+          classification_data = archivesspace.get_raw_record(classification)
+          classification_data['linked_records'].each do |linked_record|
+            # Parse related accessions
+            if linked_record['_resolved']['jsonmodel_type'] == 'accession' &&
+                linked_record['_resolved']['publish'] == true &&
+                linked_record['ref'] != params[:original_accession]
+              accessions.push({ title: linked_record['_resolved']['title'], uri: linked_record['ref'] })
+            end
+            # Parse related collections
+            if linked_record['_resolved']['jsonmodel_type'] == 'resource' &&
+                linked_record['_resolved']['publish'] == true
+              resources.push({ title: linked_record['_resolved']['title'], uri: linked_record['ref'] })
+            end
+          end
+        end
+        # return lists of accessions and collections
+        render json: { accessions: accessions, resources: resources }
+      rescue RecordNotFound
+        record_not_found(uri, 'classification')
       end
     end
   end

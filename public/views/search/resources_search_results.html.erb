@@ -32,7 +32,7 @@
                   <table class="table">
                     <thead>
                       <tr id="collection_header">
-                        <th scope="col" id="collection_title" >Collection Title &nbsp
+                        <th class="sort-options" scope="col" id="collection_title">Collection Title &nbsp
                           <span id="collection-caret"
                             <% if params[:sort] == "title_sort desc" %>
                               class="fa fa-lg fa-caret-down"
@@ -41,7 +41,7 @@
                             <% end %>>
                           </span>
                         </th>
-                        <th class="w-20 text-center" scope="col" id="collection_year">Dates &nbsp
+                        <th class="w-20 text-center sort-options" scope="col" id="collection_year">Dates &nbsp
                           <span id="year-caret"
                             <% if params[:sort] == "year_sort desc"%>
                               class="fa fa-lg fa-caret-down"

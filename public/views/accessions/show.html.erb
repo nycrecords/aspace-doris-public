@@ -1,0 +1,150 @@
+<main id="skip-header-target" role="main">
+  <section class="py-3 d-flex justify-content-center">
+    <div class="container-fluid mx-3 description">
+      <div class="row matrix-gutter justify-content-center">
+        <div class="col-8">
+          <!-- Top headings -->
+          <div class="col"><%= render partial: 'accessions/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
+          <!-- Page actions probably not needed for accessions -->
+          <div class="col hidden"><%= render partial: 'shared/page_actions', locals: {:record => @result, :title => @result.display_string, :url => request.fullpath } %></div>
+        </div>
+
+        <div class="col-3">
+          <!-- Placeholder column to align margins -->
+        </div>
+
+        <div class="col-8">
+          <hr>
+
+          <div class="col pt-1 pb-1">
+            <h2 class="h3"><%= t('accession._public.section.description') %></h2>
+            <p><%= @result.content_description %></p>
+          </div>
+
+          <%= render partial: 'accessions/record_innards' %>
+
+          <hr>
+
+          <div class="col pt-2 pb-2">
+            <h2 class="h3">Access to Unprocessed Archival Collections</h2>
+            <p id="unprocessed-note">
+              Access to Unprocessed Archival Collections
+              Unprocessed collections may include protected information related to personal privacy, health information,
+              and minors, as well as attorney-client privilege. In accordance with laws and regulations, this material
+              will be reviewed prior to providing public access and certain records may be subject to redaction or other
+              measures that restrict access. Archival and library collections may also be restricted based on physical
+              condition.</p>
+          </div>
+        </div>
+
+        <!-- Process linked records -->
+        <% classifications = Array.new  %>
+        <% @result.classifications.each do |classification| %>
+          <% classifications.push(classification['uri']) %>
+        <% end unless @result['json']['classifications'].blank? %>
+
+        <% unless classifications.blank? %>
+          <script>
+              $.ajax({
+                  url: '<%= @result.classifications[0]['uri'] %>/linked_records',
+                  type: 'GET',
+                  data: { classifications: <%= classifications.to_json.html_safe %>,
+                      original_accession: <%= @result['uri'].to_json.html_safe %> },
+                  dataType: 'json',
+                  success: function (data) {
+                      let accessions = data['accessions'];
+                      let resources = data['resources'];
+                      if (accessions.length !== 0) {
+                          $('#related-accessions').removeClass('hidden');
+                          if (accessions.length > 5) {
+                              // reverse array because of prepend
+                              accessions.reverse();
+                              for (let i = 0; i < accessions.length; i++){
+                                  let uri = accessions[i]['uri'];
+                                  let title = accessions[i]['title'];
+                                  if (i < 5) {
+                                      $('#related-accessions-list').prepend('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                                  }
+                                  else {
+                                      $('#more-accessions-fold').prepend('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                                  }
+                              }
+                              $('#more-accessions').removeClass('hidden');
+                          }
+                          else {
+                              for (let i = 0; i < accessions.length; i++) {
+                                  let uri = accessions[i]['uri'];
+                                  let title = accessions[i]['title'];
+                                  $('#related-accessions-list').append('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                              }
+                          }
+                      }
+                      if (resources.length !== 0) {
+                          $('#related-collections').removeClass('hidden');
+                          if (resources.length > 5) {
+                              // reverse array because of prepend
+                              resources.reverse();
+                              for (let i = 0; i < resources.length; i++){
+                                  let uri = resources[i]['uri'];
+                                  let title = resources[i]['title'];
+                                  if (i < 5) {
+                                      $('#related-collections-list').prepend('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                                  }
+                                  else {
+                                      $('#more-collections-fold').prepend('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                                  }
+                              }
+                              $('#more-collections').removeClass('hidden');
+                          }
+                          else {
+                              for (let i = 0; i < resources.length; i++) {
+                                  let uri = resources[i]['uri'];
+                                  let title = resources[i]['title'];
+                                  $('#related-collections-list').append('<li class="pb-2"><a href="' + uri + '">' + title + '</a><li>');
+                              }
+                          }
+                      }
+                  }
+              });
+          </script>
+        <% end %>
+
+        <!-- Side bar -->
+        <div id="accessions-sidebar" class="col-3">
+          <div id="related-accessions" class="hidden pb-2">
+            <div class="col pt-1">
+              <h2 class="h3">Related Accessions</h2>
+              <ul id="related-accessions-list" class="unstyled-list">
+                <div id="more-accessions" class="more-facets hidden">
+                  <button class="more btn btn-outline-dark btn-sm"> more &nbsp;<span class="fa fa-sm fa-plus"></span>
+                  </button>
+                  <div id="more-accessions-fold" class="below-the-fold">
+                    <button class="less btn btn-outline-dark btn-sm"> less &nbsp;<span class="fa fa-sm fa-minus"></span>
+                    </button>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </div>
+          <div id="related-collections" class="hidden">
+            <div class="col pt-1">
+              <h2 class="h3">Related Collections</h2>
+              <ul id="related-collections-list" class="unstyled-list">
+                <div id="more-collections" class="more-facets hidden">
+                  <button class="more btn btn-outline-dark btn-sm"> more &nbsp;<span class="fa fa-sm fa-plus"></span>
+                  </button>
+                  <div id="more-collections-fold" class="below-the-fold">
+                    <button class="less btn btn-outline-dark btn-sm"> less &nbsp;<span class="fa fa-sm fa-minus"></span>
+                    </button>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render partial: 'shared/modal_actions' %>
+    </div>
+    <!-- .container -->
+  </section>
+</main>
