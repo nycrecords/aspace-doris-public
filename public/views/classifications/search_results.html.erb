@@ -23,7 +23,7 @@
           <table class="table">
             <thead>
               <tr id="classifications_header">
-                <th scope="col" id="classification_title" >Record Group Title &nbsp
+                <th class="sort-options" scope="col" id="classification_title">Record Group Title &nbsp
                   <span id="classification-caret"
                     <% if params[:sort] == "title_sort desc" %>
                         class="fa fa-lg fa-caret-down"
@@ -32,7 +32,7 @@
                     <% end %>>
                   </span>
                 </th>
-                <th class="w-20 text-center" scope="col" id="classification_id">Identifier &nbsp
+                <th class="w-20 text-center sort-options" scope="col" id="classification_id">Identifier &nbsp
                   <span id="id-caret"
                     <% if params[:sort] == "identifier_sort desc"%>
                       class="fa fa-lg fa-caret-down"
