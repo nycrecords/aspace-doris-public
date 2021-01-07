@@ -57,7 +57,7 @@
         <strong>Accession <%= comp_id %>. <a href="#unprocessed-note">Unprocessed</a></strong>
         <!-- Display the first record group if it exists -->
         <% unless @result.classifications.blank? %>
-        - <a href="<%= @result.classifications[0]['uri'] %>"><%= @result.classifications[0]['title'] %></a>
+        - <a href="/classifications#recordrow-<%= @result.classifications[0]['breadcrumb'][0][:crumb].split('.')[0].downcase.parameterize.underscore %>"><%= @result.classifications[0]['title'] %></a>
         <% end %>
       </span>
     </div>

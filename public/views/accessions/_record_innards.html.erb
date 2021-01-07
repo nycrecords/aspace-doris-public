@@ -36,10 +36,13 @@
     <!-- Classifications (Records Groups) -->
     <div class="col pt-2 pb-2">
       <h2 class="h3">Record Groups</h2>
-      <a class="pb-1" href="<%= @result.classifications[0]['uri'] %>"><%= @result.classifications[0]['title'] %></a><br>
+      <a class="pb-1" href="/classifications#recordrow-<%= @result.classifications[0]['breadcrumb'][0][:crumb].split('.')[0].downcase.parameterize.underscore %>"><%= @result.classifications[0]['title'] %></a><br>
       <ul>
         <% @result.classifications.drop(1).each do |classification| %>
-          <li class="pb-1 pt-1"><a href="<%= classification['uri'] %>"><%= classification['title'] %></a></li>
+          <% subgroup_id = classification['breadcrumb'][1][:crumb].split('/')[1] %>
+          <% subgroup_id = subgroup_id.split('.') %>
+          <% subgroup_id = subgroup_id[0].parameterize.upcase + '-' + subgroup_id[1] %>
+          <li class="pb-1 pt-1"><a href="/classifications#<%= subgroup_id %>"><%= classification['title'] %></a></li>
         <% end %>
       </ul>
     </div>
