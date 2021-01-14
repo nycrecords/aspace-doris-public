@@ -41,7 +41,7 @@ end
 <%= (props.fetch(:full,false)? '<h1>' : '<h3>').html_safe %>
   <% if !props.fetch(:full,false) %>
     <div class="card m-2 mb-0">
-        <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
+        <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string.split('.')[1] %>
     </div>
   <% else %>
     <%== result.display_string %>
