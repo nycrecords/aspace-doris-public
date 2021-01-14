@@ -39,31 +39,10 @@
   <% url = result.uri %>
 <% end %>
 
-<% if indent_level == 1%>
+<% if indent_level>=1 %>
   <hr class="mt-2"/>
 <% end %>
-
-<%if indent_level < 2 %>
-  <h2>
-    <% if !props.fetch(:full,false) %>
-      <h4 class="pt-2 pb-2">
-        <%if indent_level!= 0 %>
-          <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
-          <% unless comp_id.blank? %>
-            <%= badge_label %> <%=comp_id %>:
-          <% end %>
-        <% end %>
-        <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
-      </h4>
-
-    <% else %>
-      <%== result.display_string %>
-      <small><%=t('resource._singular') %> <%= @result.ead_id %></small>
-    <% end %>
-  </h2>
-
-<% else %>
-  <h5 class="ml-2">
+  <h3 class="pt-1">
     <% if !props.fetch(:full,false) %>
       <a class="record-title" href="<%= app_prefix(url) %>">
         <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
@@ -74,18 +53,19 @@
       <small><%=t('resource._singular') %> <%= @result.ead_id %></small>
     <% end %>
 
-    <div class="badge-and-identifier">
+    <div class="badge-and-identifier my-1">
+
       <small>
+        <b>
         <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %>">
-          <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %> <% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %><% end %>
-        </div>
+         <%= badge_label %>
         <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
         <% unless comp_id.blank? %>
-          <div class="identifier">
-            <span class="id-label"><%= t('search_sorting.identifier') %>:</span>&#160;<span class="component"><%= comp_id %></span>
+            <span class="component"><%= comp_id %></span>
           </div>
         <% end %>
+          </b>
       </small>
+
     </div>
-  </h5>
-<% end %>
+  </h3>

@@ -738,8 +738,10 @@
                 row.data('child_count', node.child_count);
                 row.css('height','auto')
                 var title = row.find('.title');
+                title.addClass("pl-"+level);
+                title.addClass("pr-1");
                 var strippedTitle = $("<div>").html(node.title).text();
-                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title)).addClass('text-justify');
+                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).prop('style','box-decoration-break:clone;').text(node.title)).addClass('text-justify');
                 title.attr('title', strippedTitle);
 
                 var ex = row.find('.expandme');

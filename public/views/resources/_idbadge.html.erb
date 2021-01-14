@@ -56,6 +56,6 @@ end
   c.fetch('breadcrumb').each do |crumb, i|
      crumb_uri = crumb.fetch(:uri)
        crumb_uri = c.fetch('uri') if crumb_uri.blank? %>
-    <p class="mb-1 <% if defined? (pad) %>pl-5<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), app_prefix(crumb_uri),class: 'description' %></p>
+    <p class="mb-1 <% if defined? (pad) %>pl-5<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), '/classifications#recordrow-'+crumb.fetch(:crumb).split('.')[0].downcase.parameterize.underscore,class: 'description' %></p>
   <%end
 end %>
