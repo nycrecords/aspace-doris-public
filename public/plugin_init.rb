@@ -158,7 +158,30 @@ Rails.application.config.after_initialize do
       render 'search/resources_search_results'
       #    end
     end
+    def tree_node_from_root
+      @root_uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
+      render :json => archivesspace.get_raw_record(@root_uri + '/tree/node_from_root_' + params[:node_ids].first)
+    rescue RecordNotFound
+      render json: {}, status: 404
+    end
+
+    def infinite_resolve
+      @resolve_uri = params[:resolve_uri];
+      @result =  archivesspace.get_record(@resolve_uri)
+      render partial: 'resources/infinite_item', locals: {:result => @result, :props => { :full => true}}
+    end
+
+    def raw_json
+      begin
+        render json: archivesspace.get_raw_record(params[:record_uri])
+      rescue RecordNotFound
+        record_not_found(uri,'Record');
+      end
+    end
+
   end
+
+
 
   module Searchable
     extend ActiveSupport::Concern

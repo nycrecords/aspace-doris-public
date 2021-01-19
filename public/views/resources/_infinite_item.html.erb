@@ -1,7 +1,5 @@
-<%
-  indent_level = @result.raw.fetch('ancestors', []).length
-%>
-<div class="infinite-item infinite-item-indent-<%= indent_level %>">
+
+<div class="infinite-item">
   <div class="information">
       <%=
         render partial: 'resources/infinite_idbadge', locals: {
@@ -16,7 +14,7 @@
     <%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => scopecontent_note, :notitle => true} %>
   <% end %>
 
-  <% if indent_level < 2 %>
+  <% unless (@result.extents.blank? || all_inherited?(@result.extents)) && (@result.dates.blank? || all_inherited?(@result.dates)) %>
     <div class="row pt-2">
       <% unless @result.extents.blank? || all_inherited?(@result.extents) %>
         <div class="col-lg-6">
@@ -42,22 +40,25 @@
         </div>
       <% end %>
     </div>
-  <%end %>
+    <% end %>
 
-  <div  class="row pt-2">
-    <div class="col-lg">
+
+
       <% unless @result.agents.blank? || all_inherited?(@result.agents.collect(&:last).flatten) %>
+    <div  class="row pt-2">
+      <div class="col-lg">
         <h5>Creators</h5>
           <% @result.agents.collect(&:last).flatten.each do |relationship| %>
             <p>
               <a href="<%=app_prefix(relationship.fetch('ref'))%>">
-                <span class="fa fa-user"/>
+                <span class="fa fa-user"></span>
                 <%=relationship.fetch('_resolved').fetch('title')%>
               </a>
             </p>
           <% end %>
-      <% end %>
+      </div>
     </div>
-  </div>
+      <% end %>
+
 </div>
 

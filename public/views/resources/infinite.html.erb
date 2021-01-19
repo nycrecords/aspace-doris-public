@@ -4,85 +4,216 @@
 
     <div class="container-flex mx-6 description">
 
+
       <div class="information col-sm-7">
       <%= render partial: 'resources/idbadge', locals: {:result => @result, :props => { :full => true} } %>
       </div>
 
       <%= render partial: 'resources/resource_alltabs' %>
 
-      <%= javascript_include_tag 'treesync' %>
-      <%= javascript_include_tag 'infinite_scroll' %>
-      <%= javascript_include_tag "#{@base_url}/assets/javascripts/largetree" %>
-      <%= javascript_include_tag "#{@base_url}/assets/javascripts/tree_renderer" %>
+      <% stylesheet_link_tag "#{@base_url}/assets/stylesheets/treeview" %>
 
-      <div class="row" id="tabs">
-        <div class="infinite-record-wrapper container-fluid col-8 pl-3">
-          <div class="infinite-record-container" >
-            <div class="root">
-              <h3 class="pt-2">Collection Organization</h3>
-              <% waypoint_size = 20 %>
-              <% @ordered_records.each_slice(waypoint_size).each_with_index do |refs, i| %>
-                <div class="waypoint" data-waypoint-number="<%= i %>" data-waypoint-size=<%= waypoint_size %> data-uris="<%= refs.map {|r| r['ref']}.join(';') %>"></div>
-              <% end %>
-            </div>
-          </div>
+      <%= javascript_include_tag "#{@base_url}/assets/javascripts/treeview" %>
+      <div class="row" id="notes_row">
+
+        <div id="record_info" class="col-8">
+          <%= render partial: 'resources/infinite_item', locals: {:result => @result, :props => { :full => true} } %>
+          <div id="child_info"></div>
         </div>
 
-        <div id="sidebar" class="sidebar sidebar-container col-4 ">
+        <div id="sidebar" class="sidebar sidebar-container col-4 sticky-top">
           <% if AppConfig[:pui_search_collection_from_collection_organization] %>
             <%= render partial: 'shared/search_collection_form', :locals => {:resource_uri => @result['uri'], :action_text => t('actions.search_in', :type => t('resource._singular'))} %>
           <% end %>
+          <div class="sticky-top">
           <div class="bg-light mt-2 p-2 align-content-center">
             <h3 class="h5 text-center">Collection Organization</h3>
           </div>
+
           <div class="border">
-            <div class="infinite-tree-view largetree-container pb-2 pl-2" id='tree-container'></div>
+            <ul id="sidebar-tree" class="py-2 pl-2">
+              <% current_depth = -1 %>
+              <%@ordered_records.each_with_index { |single_record,idx| %>
+
+                <% if single_record['level']!="file" && single_record['level']!= "item"%>
+                  <!--Root node-->
+                  <% if single_record['depth'] == 0 %>
+
+                    <li id="root"><%=single_record['display_string'] %>
+                    <% next %>
+
+                   <!-- Sub-list for the current node-->
+                  <% elsif single_record['depth'] > current_depth %>
+                    <ul id="subtree">
+                      <li class=" list-unstyled" ><a href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
+                    <% current_depth = single_record['depth'] %>
+
+                    <!--End of the sub-list for the current node-->
+                  <% elsif single_record['depth'] < current_depth %>
+                    <!--Ending all the sub-lists until the level for current node is reached-->
+                      <% while single_record['depth'] < current_depth %>
+                      </ul>
+                    </li>
+                      <% current_depth -= 1 %>
+                    <% end %>
+                    <li class=" list-unstyled" ><a class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
+                      <% current_depth = single_record['depth'] %>
+
+                    <!--Information for all nodes of the sub-list-->
+                  <% else %>
+                    <li class=" list-unstyled"><a  class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a></li>
+                  <% end %>
+
+                <% end %>
+              <%} %>
+              </li>
+            </ul>
+          </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 </main>
 
 <script>
- var syncer = new TreeSync('<%= params[:rid]%>');
- window.syncer = syncer;
+// Constructing sidebar tree
+$('#sidebar-tree').treed();
 
- var scroll = new InfiniteScroll('<%= url_for(:action => :show) %>/infinite',
-                                 $('.infinite-record-wrapper'),
-                                 <%= @ordered_records.length %>,
-                                 function() {
-                                     syncer.infiniteScrollIsReady(scroll);
-                                 });
+//Displaying the main record on page load
+$.ajax({
+    url: "<%=@result['json']['uri']%>/tree/root",
+    type: 'GET',
+    dataType: 'json',
+    success: function (data) {
 
- /* NOTE: This just here for debugging... */
- window.scroller = scroll;
- var tree = new LargeTree(new TreeDataSource('<%= url_for(:action => :show) %>/tree'),
-     $('.infinite-tree-view'),
-     '<%= @root_uri %>',
-     true,
-     new SimpleRenderer(),
-     function() {
-         syncer.treeIsReady(tree);
-     },
-     function(current_node, tree) {
-         tree.expandNode(current_node);
-     });
+        if (data['child_count'] > 0) {
 
- window.tree = tree;
+            var content = "<h5 class=\"mt-1\">Contents</h5>";
+            var waypoints = data['precomputed_waypoints'];
+            for (singleWaypoint in waypoints) {
+
+                var waypointNodes = waypoints[singleWaypoint];
+
+                for (waypointNode in waypointNodes) {
+
+                    var nodesData = waypointNodes[waypointNode];
+                    content += " <div id=\"sub-list\">";
+
+                    for (nodeData in nodesData) {
+                        content+="<p><a href="+nodesData[nodeData]['uri']+">"+nodesData[nodeData]['title']+ "</a></p>";
+
+                    }
+
+                    content+="</div>";
+                    document.getElementById('child_info').innerHTML += content;
+                }
+            }
+        }
+    }
+});
 </script>
 
-<script>
-  // handle clicks on tree items
-  $('.infinite-record-wrapper').on('click', '.infinite-record-record a.record-title', function(event) {
-      // update the hash so browser-back returns user to the record they clicked
-      var $record = $(this).closest('.infinite-record-record');
-      var uri = $record.data('uri');
-      var tree_id = TreeIds.uri_to_tree_id(uri);
-      location.hash = uri;
 
-      return true;
-  });
+<script type="text/javascript">
+  // Function to load information of record based on sidebar selection
+  function load_tree(parent_uri) {
+
+    //Getting the record id from uri
+    var parts=parent_uri.split('/');
+    var node_id =parseInt(parts[parts.length-1]);
+
+    //Removing the main record from the left panel
+    document.getElementById('child_info').innerHTML ="";
+    $.ajax({
+      url: "<%=@result['json']['uri']%>/tree/node_from_root",
+      method: "GET",
+      dataType: 'json',
+      data: {
+          node_ids: [node_id],
+      },
+      success(record_tree) {
+        //Displaying data for all the parent elements of the clicked element
+        for (tree_branch in record_tree) {
+          var branch_data = record_tree[tree_branch]
+          for (node_data in branch_data) {
+            if (branch_data[node_data].node) {
+              $.ajax({
+                async: false,
+                url: "<%=@result['json']['uri']%>/tree/infinite_resolve",
+                method: "GET",
+                data: {
+                    resolve_uri: branch_data[node_data].node
+                },
+                success(resolved_node) {
+                    //Appending the data for tree from root to the parent of clicked element
+                    document.getElementById('child_info').innerHTML += resolved_node;
+                }
+
+              });
+            }
+
+          }
+        }
+        $.ajax({
+          async: false,
+          url: "<%=@result['json']['uri']%>/tree/infinite_resolve",
+          method: "GET",
+          data: {
+              resolve_uri: parent_uri
+          },
+          success(resolved_node) {
+            //Appending the data for clicked element
+            document.getElementById('child_info').innerHTML += resolved_node;
+            //Appending the links to the sub-records of the clicked element
+            $.ajax({
+              url: "<%=@result['json']['uri']%>/tree/node?node=" + parent_uri,
+              type: 'GET',
+              dataType: 'json',
+              async:false,
+              success: function (subrecord_links) {
+
+                if (subrecord_links['child_count'] > 0) {
+
+                  var content = "<h5 class=\"mt-1\">Contents</h5>";
+                  var waypoints = subrecord_links['precomputed_waypoints'];
+                  for (singleWaypoint in waypoints) {
+
+                    var waypointNodes = waypoints[singleWaypoint];
+
+                    for (waypointNode in waypointNodes) {
+                      var nodesData = waypointNodes[waypointNode];
+                      content += " <div id=\"sub-list\">";
+                      for (nodeData in nodesData) {
+
+                        $.ajax({
+                          url: "<%=@result['json']['uri']%>/raw_json?record_uri=" + nodesData[nodeData]['uri'],
+                          type: 'GET',
+                          dataType: 'json',
+                          async:false,
+                              success: function(record_data){
+                                  content+="<p><a href="+nodesData[nodeData]['uri']+">"+record_data['display_string']+"</a></p>";
+                              }
+                        });
+                      }
+                      content+="</div>";
+                      document.getElementById('child_info').innerHTML += content;
+                    }
+                  }
+                }
+              }
+            });
+          }
+
+      });
+
+    }
+          });
+
+
+  }
+
 </script>
 
 <%= render partial: 'shared/modal_actions' %>

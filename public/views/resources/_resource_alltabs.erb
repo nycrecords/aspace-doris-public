@@ -5,7 +5,5 @@
                                                            :enabled => true, :hidden => false } %>
     <%= render partial: 'resources/resource_tab', locals: {:action => :infinite, :text => t('actions.hierarch'),
                                                            :enabled => @has_children, :hidden => false } %>
-    <%= render partial: 'resources/resource_tab', locals: {:action => :inventory, :text => t('actions.numeric'),
-                                                           :enabled => @has_containers, :hidden => AppConfig[:pui_hide][:container_inventory] } %>
   </ul>
 </div>
