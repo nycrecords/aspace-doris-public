@@ -23,6 +23,9 @@
       <% if !result['json']['linked_records'].empty? %>
 
         <% result['json']['linked_records'].each do |linked_record|%>
+          <%if linked_record['_resolved']['publish'] == false %>
+          <% next %>
+            <% end %>
           <% linked_records_types[linked_record['_resolved']['jsonmodel_type']]<<linked_record %>
         <% end %>
 
@@ -38,6 +41,7 @@
                <div class="card-body">
                  <table class="table pl-2">
                    <tbody>
+                   <%rec = rec.sort{ |a,b| a['_resolved']['title'] <=> b['_resolved']['title'] } %>
                    <% rec.each do |linked_record|%>
                      <tr>
                        <td>
@@ -161,18 +165,20 @@
                                     success: function (info) {
 
                                         if(info['linked_records'].length>0) {
-                                            //Calculating the total linked records for subgroups
-                                            total_child_linked_records += info['linked_records'].length;
-                                            //Removing whitespace and '.' from identifier
-                                            var subgroup = document.getElementById("<%=result['json']['identifier']%>-subgroup");
-                                            var identifier = info['identifier'].replace(" ", "-");
-                                            identifier = identifier.replace(".", "-");
+                                            //Sorting records by title
+                                            info['linked_records'].sort(function (a, b) {
+                                                return a['_resolved']['title'].localeCompare(b['_resolved']['title'])
+                                            });
                                             //indexes for collection linked records
                                             var collection_idxs = [];
                                             //indexes for accession linked records
                                             var accessions_idxs = [];
                                             //Separating the indexes for collection linked records and accesssion linked records
-                                            for (i = 0; i < info['linked_records'].length; i++) {
+                                            for (let i = 0; i < info['linked_records'].length; i++) {
+                                                //Checking if the record is published
+                                                if (info['linked_records'][i]['_resolved']['publish'] == false) {
+                                                    continue;
+                                                }
 
                                                 if (info['linked_records'][i]['_resolved']['jsonmodel_type'] == "resource") {
                                                     collection_idxs.push(i);
@@ -180,80 +186,91 @@
                                                     accessions_idxs.push(i);
                                                 }
                                             }
-                                            subgroup.innerHTML += "<li class='pt-1' id=\"" + identifier + "\"><h5> Subgroup " + info['identifier'] + " " + info['title'] + "</h5>\n";
-                                            //Creating accordion for collection linked records
-                                            if (collection_idxs.length > 0) {
-                                                <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
+                                            //Calculating the total linked records for subgroups
+                                            total_child_linked_records = collection_idxs.length+accessions_idxs.length;
+                                            // Checking if there are published records
+                                            if (total_child_linked_records > 0) {
 
-                                                var content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-resource\">\n" +
-                                                    "<div class=\"card\">\n" +
-                                                    "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-resource\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-resource\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-resource\">\n" +
-                                                    "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + collection_idxs.length + " Related Collections</span>\n" +
-                                                    "</a>\n" +
-                                                    "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-resource\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-resource\" data-parent=\"#accordion-" + identifier + "-resource\">\n" +
-                                                    "<div class=\"card-body\">\n" +
-                                                    "<table class=\"table pl-2\">\n" +
-                                                    "<tbody>";
+                                                //Removing whitespace and '.' from identifier
+                                                var subgroup = document.getElementById("<%=result['json']['identifier']%>-subgroup");
+                                                var identifier = info['identifier'].replace(" ", "-");
+                                                identifier = identifier.replace(".", "-");
 
+                                                subgroup.innerHTML += "<li class='pt-1' id=\"" + identifier + "\"><h5> Subgroup " + info['title'] + "</h5>\n";
+                                                //Creating accordion for collection linked records
+                                                if (collection_idxs.length > 0) {
+                                                    <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
 
-                                                collection_idxs.forEach(function (i) {
-
-                                                    content += "<tr><td><a href=\"" + info['linked_records'][i]['ref'] + "\">" + info['linked_records'][i]['_resolved']['title'] + "</a><small> Collection ";
-                                                    var j=0;
-                                                    while(typeof info['linked_records'][i]['_resolved']['id_'+j] != 'undefined') {
-                                                        content += info['linked_records'][i]['_resolved']['id_'+j]+"-";
-                                                        j++;
-                                                    }
-                                                    //Removing extra '-' at the end of identifier
-                                                    content = content.slice(0,-1);
-                                                    content+= "</small></tr></td>";
+                                                    content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-resource\">\n" +
+                                                        "<div class=\"card\">\n" +
+                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-resource\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-resource\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-resource\">\n" +
+                                                        "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + collection_idxs.length + " Related Collections</span>\n" +
+                                                        "</a>\n" +
+                                                        "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-resource\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-resource\" data-parent=\"#accordion-" + identifier + "-resource\">\n" +
+                                                        "<div class=\"card-body\">\n" +
+                                                        "<table class=\"table pl-2\">\n" +
+                                                        "<tbody>";
 
 
-                                                });
+                                                    collection_idxs.forEach(function (i) {
 
-                                                content += " </tbody>\n" +
-                                                    "</table>\n" +
-                                                    "</div>\n" +
-                                                    "</div><!-- .collapse -->\n" +
-                                                    "</div><!-- .card-->\n" +
-                                                    "</div></li>";
-                                                //Appeding accordion to subgroup div
-                                                subgroup.innerHTML += content;
-                                            }
-                                            if (accessions_idxs.length > 0) {
-
-                                                var content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-classification\">\n" +
-                                                    "<div class=\"card\">\n" +
-                                                    "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-classification\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-classification\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-classification\">\n" +
-                                                    "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + accessions_idxs.length + " Related Accessions</span>\n" +
-                                                    "</a>\n" +
-                                                    "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-classification\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-classification\" data-parent=\"#accordion-" + identifier + "-classification\">\n" +
-                                                    "<div class=\"card-body\">\n" +
-                                                    "<table class=\"table pl-2\">\n" +
-                                                    "<tbody>";
-
-                                                accessions_idxs.forEach(function (i) {
-
-                                                    content += "<tr><td><a href=\"" + info['linked_records'][i]['ref'] + "\">" + info['linked_records'][i]['_resolved']['title'] + "</a><small> Accession ";
-                                                    var j=0;
-                                                    while(typeof info['linked_records'][i]['_resolved']['id_'+j] != 'undefined') {
-                                                        content += info['linked_records'][i]['_resolved']['id_'+j]+"-";
-                                                        j++;
-                                                    }
-                                                    content = content.slice(0,-1);
-                                                    content+= "</small></tr></td>";
+                                                        content += "<tr><td><a href=\"" + info['linked_records'][i]['ref'] + "\">" + info['linked_records'][i]['_resolved']['title'] + "</a><small> Collection ";
+                                                        var j = 0;
+                                                        while (typeof info['linked_records'][i]['_resolved']['id_' + j] != 'undefined') {
+                                                            content += info['linked_records'][i]['_resolved']['id_' + j] + "-";
+                                                            j++;
+                                                        }
+                                                        //Removing extra '-' at the end of identifier
+                                                        content = content.slice(0, -1);
+                                                        content += "</small></tr></td>";
 
 
-                                                });
+                                                    });
 
-                                                content += " </tbody>\n" +
-                                                    "  </table>\n" +
-                                                    " </div>\n" +
-                                                    "</div><!-- .collapse -->\n" +
-                                                    "</div><!-- .card -->\n" +
-                                                    " </div></li>";
+                                                    content += " </tbody>\n" +
+                                                        "</table>\n" +
+                                                        "</div>\n" +
+                                                        "</div><!-- .collapse -->\n" +
+                                                        "</div><!-- .card-->\n" +
+                                                        "</div></li>";
+                                                    //Appeding accordion to subgroup div
+                                                    subgroup.innerHTML += content;
+                                                }
+                                                if (accessions_idxs.length > 0) {
 
-                                                subgroup.innerHTML += content;
+                                                    var content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-classification\">\n" +
+                                                        "<div class=\"card\">\n" +
+                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-classification\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-classification\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-classification\">\n" +
+                                                        "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + accessions_idxs.length + " Related Accessions</span>\n" +
+                                                        "</a>\n" +
+                                                        "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-classification\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-classification\" data-parent=\"#accordion-" + identifier + "-classification\">\n" +
+                                                        "<div class=\"card-body\">\n" +
+                                                        "<table class=\"table pl-2\">\n" +
+                                                        "<tbody>";
+
+                                                    accessions_idxs.forEach(function (i) {
+
+                                                        content += "<tr><td><a href=\"" + info['linked_records'][i]['ref'] + "\">" + info['linked_records'][i]['_resolved']['title'] + "</a><small> Accession ";
+                                                        var j = 0;
+                                                        while (typeof info['linked_records'][i]['_resolved']['id_' + j] != 'undefined') {
+                                                            content += info['linked_records'][i]['_resolved']['id_' + j] + "-";
+                                                            j++;
+                                                        }
+                                                        content = content.slice(0, -1);
+                                                        content += "</small></tr></td>";
+
+
+                                                    });
+
+                                                    content += " </tbody>\n" +
+                                                        "  </table>\n" +
+                                                        " </div>\n" +
+                                                        "</div><!-- .collapse -->\n" +
+                                                        "</div><!-- .card -->\n" +
+                                                        " </div></li>";
+
+                                                    subgroup.innerHTML += content;
+                                                }
                                             }
                                         }
 
@@ -266,8 +283,18 @@
                         }
 
                     }
+                    //Checking for published linked records for parent
+                    let published_records=false;
+                    <% result['json']['linked_records'].each do |linked_record|%>
+                      <%if linked_record['_resolved']['publish'] == true %>
+                        published_records = true;
+                        <% break %>
+                      <%else %>
+                        <% next %>
+                      <%end %>
+                    <% end %>
                     //Removing parent(record-group) if no sub-group linked records and no parent linked records
-                    if(total_child_linked_records ==0 && <%=result['json']['linked_records'].empty? %>){
+                    if(total_child_linked_records ==0 && published_records==false){
                         $("#recordrow-<%=result['json']['identifier'].parameterize.underscore %>").remove();
                     }
 
@@ -275,8 +302,19 @@
                 }
                 //Removing parent if there is no sub-group and parent has no linked records
                 else {
-                    if(<%=result['json']['linked_records'].empty? %>)
-                    $("#recordrow-<%=result['json']['identifier'].parameterize.underscore %>").remove();
+                    //Checking for published linked records for parent
+                    let published_records=false;
+                    <% result['json']['linked_records'].each do |linked_record|%>
+                      <%if linked_record['_resolved']['publish'] == true %>
+                        published_records = true;
+                        <% break %>
+                      <%else %>
+                        <% next %>
+                      <%end %>
+                    <% end %>
+
+                    if(published_records == false)
+                      $("#recordrow-<%=result['json']['identifier'].parameterize.underscore %>").remove();
                 }
 
             },
