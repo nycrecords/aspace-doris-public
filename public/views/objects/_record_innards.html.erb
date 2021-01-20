@@ -13,6 +13,7 @@
 		<%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => over} %>
 	<% end %>
 
+	<% if !@result.extents.blank? && !@result.dates.blank?%>
 	<div class="row pb-2">
 		<div class="col-lg-6">
 			<% unless @result.extents.blank? %>
@@ -32,18 +33,21 @@
 		</div>
 	</div>
 	<hr>
+		<% end %>
 
-	<div class="row pb-2">
-		<div class="col-lg">
+
 			<% if @result.agents && Array(@result.agents['creator']).length > 0 %>
 				<% a_direct_creator = @result.agents['creator'] %>
 				<% unless a_direct_creator.empty? %>
-					<%= render partial: 'resources/agents_list', locals: {:list => {'creator' => a_direct_creator}} %>
+					<div class="row pb-2">
+						<div class="col-lg">
+							<%= render partial: 'resources/agents_list', locals: {:list => {'creator' => a_direct_creator}} %>
+						</div>
+					</div>
+					<hr>
 				<% end %>
 			<% end %>
-		</div>
-	</div>
-	<hr>
+
 
 	<% unless @result.container_titles_and_uris.blank? %>
 		<h4 class="mt-1"><%= t('containers') %></h4>

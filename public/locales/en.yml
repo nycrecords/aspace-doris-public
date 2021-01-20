@@ -57,3 +57,7 @@ en:
     description: Description
 
   cont_arr: Collection Organization
+
+  digital_object: &digital_object_attributes
+    _public:
+      badge_label: "%{level}"
