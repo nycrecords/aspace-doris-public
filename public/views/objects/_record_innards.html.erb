@@ -9,26 +9,37 @@
 			 folder.shift # remove abstract from in-folder notes
 
 		 end %>
-	<% unless over.blank? %>
+	<% unless over.blank?%>
+		<% if over['is_inherited'].blank? %>
 		<%= render partial: 'shared/single_note', locals: {:type => 'abstract', :note_struct => over} %>
+			<% end %>
 	<% end %>
 
 	<% if !@result.extents.blank? && !@result.dates.blank?%>
 	<div class="row pb-2">
-		<div class="col-lg-6">
+		<div class="col-lg-6" id="object_extents">
 			<% unless @result.extents.blank? %>
 				<h4 class="pt-1"><%= t('resource._public.extent') %></h4>
+				<% @parent_extents =  true %>
 				<% @result.extents.each do |ext| %>
-					<p class="extent"><%= inheritance(ext['_inherited']).html_safe %>
-						<%= ext['display'].downcase%>
-					</p>
+					<% if ext['_inherited'].blank? %>
+						<% @parent_extents = false %>
+						<p class="extent"><%= inheritance(ext['_inherited']).html_safe %>
+							<%= ext['display'].downcase%>
+						</p>
+					<% end %>
+				<% end %>
+				<% if @parent_extents ==  true %>
+					<script type="text/javascript">
+						$('#object_extents').remove();
+					</script>
 				<% end %>
 			<% end %>
 		</div>
-		<div class="col-lg-6">
+		<div class="col-lg-6" id="object_dates">
 			<% unless @result.dates.blank? %>
 				<h4 class="pt-1"><%= t('resource._public.dates') %></h4>
-				<%= render partial: 'shared/dates', locals: {:dates => @result.dates} %>
+				<%= render partial: 'objects/dates', locals: {:dates => @result.dates} %>
 			<% end %>
 		</div>
 	</div>
@@ -36,30 +47,20 @@
 		<% end %>
 
 
-			<% if @result.agents && Array(@result.agents['creator']).length > 0 %>
-				<% a_direct_creator = @result.agents['creator'] %>
-				<% unless a_direct_creator.empty? %>
-					<div class="row pb-2">
-						<div class="col-lg">
-							<%= render partial: 'resources/agents_list', locals: {:list => {'creator' => a_direct_creator}} %>
-						</div>
-					</div>
-					<hr>
-				<% end %>
-			<% end %>
+	<% if @result.agents && Array(@result.agents['creator']).length > 0 %>
+		<% a_direct_creator = @result.agents['creator'] %>
+		<% unless a_direct_creator.empty? %>
+			<div class="row pb-2"  id="object_agents">
+				<div class="col-lg">
+					<%= render partial: 'objects/agents_list', locals: {:list => {'creator' => a_direct_creator}} %>
+				</div>
+			</div>
 
-
-	<% unless @result.container_titles_and_uris.blank? %>
-		<h4 class="mt-1"><%= t('containers') %></h4>
-		<%@result.container_titles_and_uris.each do |top_container| %>
-			<ul class = "present_list ml-0 pl-0">
-				<p>
-					<a herf="<%= top_container['uri'] %>"><%= top_container['title'] %></a>
-				</p>
-			</ul>
-			<% end %>
-		<hr/>
+		<% end %>
 	<% end %>
+
+
+
 	<div class ="pt-2">
 		<% (@result.notes["accessrestrict"] || []).each do |note_struct| %>
 			<% unless note_struct['note_text'].blank? %>
