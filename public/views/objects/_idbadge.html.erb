@@ -1,5 +1,5 @@
 <%
-if result.level
+  if result.level
     if result.primary_type =~ /digital_object/
       level = I18n.t("enumerations.digital_object_level.#{result.level}", :default => result.level)
       badge_label = I18n.t("digital_object._public.badge_label", :level => level)
@@ -7,35 +7,35 @@ if result.level
       level = result.level == 'otherlevel' ? result.other_level : result.level
       badge_label = I18n.t("enumerations.archival_record_level.#{level}", :default => level)
     end
-else
+  else
     badge_label = t("#{result.primary_type}._singular")
-end
+  end
 %>
 
 <%# build URL with slugs depending on the primary type %>
 <% case result.primary_type %>
-  <% when "resource" %>
-    <% url = resource_base_url(result) %>
-  <% when "archival_object" %>
-    <% url = archival_object_base_url(result) %>
-  <% when "digital_object" %>
-    <% url = digital_object_base_url(result) %>
-  <% when "accession" %>
-    <% url = accession_base_url(result) %>
-  <% when "subject" %>
-    <% url = subject_base_url(result) %>
-  <% when "classification" %>
-    <% url = classification_base_url(result) %>
-  <% when "agent_person" %>
-    <% url = agent_base_url(result) %>
-  <% when "agent_family" %>
-    <% url = agent_base_url(result) %>
-  <% when "agent_corporate_entity" %>
-    <% url = agent_base_url(result) %>
-  <% when "agent_software" %>
-    <% url = agent_base_url(result) %>
-  <% else %>
-    <% url = result.uri %>
+<% when "resource" %>
+  <% url = resource_base_url(result) %>
+<% when "archival_object" %>
+  <% url = archival_object_base_url(result) %>
+<% when "digital_object" %>
+  <% url = result['json']['linked_instances'][0]['ref'] %>
+<% when "accession" %>
+  <% url = accession_base_url(result) %>
+<% when "subject" %>
+  <% url = subject_base_url(result) %>
+<% when "classification" %>
+  <% url = classification_base_url(result) %>
+<% when "agent_person" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_family" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_corporate_entity" %>
+  <% url = agent_base_url(result) %>
+<% when "agent_software" %>
+  <% url = agent_base_url(result) %>
+<% else %>
+  <% url = result.uri %>
 <% end %>
 
 <h2 <% if defined? (pad) %>class="pl-5" <% end %>>
@@ -52,15 +52,35 @@ end
   <% end %>
 </h2>
 <div class="badge-and-identifier mb-1">
+  <%if !result['json'].has_key?("component_id_inherited") %><a href="<%=url%>"> <% end %>
   <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %> d-inline-block <%if result['json'].has_key?("component_id_inherited") %>mr-1<% end %>">
-    <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %> <% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %><% end %>
+    <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %><% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %> <% else %>:<% end %>
   </div>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
-  <%#= comp_id %>
   <% unless comp_id.blank? %>
     <div class="identifier d-inline-block">
-      <b><span class="id-label"><%if result['json'].has_key?("component_id_inherited") %><%=result['json']['component_id_inherited']['level'] %><% end %>:</span>&#160;<span class="component"><%= comp_id %></span></b>
+      <%if result['json'].has_key?("component_id_inherited") %>
+        <b>
+          <a href="<%=result['json']['component_id_inherited']['ref'] %>">
+        <span class="id-label">
+            <%=result['json']['component_id_inherited']['level']%>:
+        </span>
+        <span class="component">
+            <%= comp_id %>
+        </span>
+          </a>
+        </b>
+      <% else %>
+        <span class="id-label">
+        </span>
+        <span class="component">
+          <%= comp_id %>
+        </span>
+      <% end %>
     </div>
   <% end %>
+  <%if !result['json'].has_key?("component_id_inherited") %></a><% end %>
 </div>
+<% if !result.primary_type == "digital_object" %>
 <hr/>
+<% end %>
