@@ -1,0 +1,18 @@
+<p<% if dates.length == 1 %> class="dates-is-single-date"<% end %>>
+<% @parent_dates = true %>
+<% dates.each_with_index do |date, ndx| %>
+  <% if date['_inherited'].blank? %>
+    <% @parent_dates = false %>
+    <% if ndx == dates.size - 1 %>
+      <span class=dates><%= inheritance(date['_inherited']).html_safe %><%= date['final_expression'] %></span>
+    <% else %>
+      <span class=dates><%= inheritance(date['_inherited']).html_safe %><%= date['final_expression'] %>,</span>
+    <% end %>
+  <% end %>
+<% end %>
+</p>
+<% if @parent_dates ==  true %>
+  <script type="text/javascript">
+      $('#object_dates').remove();
+  </script>
+<% end %>
