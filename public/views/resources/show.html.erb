@@ -1,9 +1,9 @@
- <main id="skip-header-target" role="main">
-    <section class="py-3 d-flex justify-content-center">
-      <div class="container-fluid mx-3 description">
-        <%= render partial: 'resources/idbadge', locals: {:result => @result,:props => { :full => true},:pad =>true } %>
+<main id="skip-header-target" role="main">
+  <section class="py-3 d-flex justify-content-center">
+    <div class="container-fluid mx-3 description">
+      <%= render partial: 'resources/idbadge', locals: {:result => @result,:props => { :full => true},:pad =>true } %>
 
-        <div class="row px-5 matrix-gutter justify-content-center">
+      <div class="row px-5 matrix-gutter justify-content-center">
         <%= render partial: 'resources/resource_alltabs' %>
 
         <div class="row" id="notes_row">
@@ -13,13 +13,13 @@
           </div>
           <div id="sidebar" class="col-4" <% unless @has_children %>style="display: none"<% end %>>
             <% if defined?(@filters) && defined?(@search) %>
-            <%= render partial: 'shared/facets' %>
-           <% end %>
-           <%= render partial: 'shared/children_tree', :locals => {:heading_text => t('cont_arr'), :root_node_uri => @result.uri, :current_node_uri => @result.uri} %>
+              <%= render partial: 'shared/facets' %>
+            <% end %>
+            <%= render partial: 'shared/children_tree', :locals => {:heading_text => t('cont_arr'), :root_node_uri => @result.uri, :current_node_uri => @result.uri} %>
           </div>
         </div>
         <%= render partial: 'shared/modal_actions' %>
-        </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>

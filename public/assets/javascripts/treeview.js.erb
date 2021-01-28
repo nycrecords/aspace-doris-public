@@ -54,5 +54,9 @@ $.fn.extend({
                 e.preventDefault();
             });
         });
+        //Displaying the first level
+        $('#root span').first().trigger('click');
+        //Removing the glyphicon for the root level for consistency
+        $('#root').find('span').first().remove();
     }
 });

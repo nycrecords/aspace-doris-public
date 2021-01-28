@@ -104,6 +104,7 @@ Rails.application.config.after_initialize do
 
   class ResourcesController
     # present a list of resources.  If no repository named, just get all of them.
+    include ViewHelper
     def index
       @repo_id = params.fetch(:rid, nil)
       if @repo_id
@@ -179,8 +180,48 @@ Rails.application.config.after_initialize do
       end
     end
 
-  end
 
+    def get_dataid
+      data_links = params[:data_links]
+      identifiers=[];
+      data_links.each do |data_link|
+        #Fetching the records for the uri
+        raw_data=archivesspace.get_record(data_link)
+        badge_label="";
+        #Creating the identifier
+        if raw_data.level
+          if raw_data.primary_type =~ /digital_object/
+            level = I18n.t("enumerations.digital_object_level.#{raw_data.level}", :default => raw_data.level)
+            badge_label = I18n.t("digital_object._public.badge_label", :level => level)
+          else
+            level = raw_data.level == 'otherlevel' ? raw_data.other_level : raw_data.level
+            badge_label = I18n.t("enumerations.archival_record_level.#{level}", :default => level)
+          end
+        else
+          badge_label = t("#{raw_data.primary_type}._singular")
+        end
+
+        if raw_data.container_summary_for_badge
+          badge_label+="-"+raw_data.container_summary_for_badge
+        else
+          badge_label+=":"
+        end
+
+        comp_id = display_component_id(raw_data,true)
+        unless comp_id.blank?
+          badge_label+= comp_id
+        end
+        #Adding identifier to array of identifiers
+        identifiers.push(badge_label);
+      end
+      #Return list of identifiers
+      render json: { identifiers:identifiers }
+
+      rescue RecordNotFound
+        record_not_found(uri, 'resource')
+    end
+
+  end
 
 
   module Searchable
