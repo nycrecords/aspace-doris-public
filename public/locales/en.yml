@@ -61,3 +61,6 @@ en:
   digital_object: &digital_object_attributes
     _public:
       badge_label: "%{level}"
+
+  errors:
+    backend_down_message: ArchivesSpace is currently experiencing technical difficulties. We apologise for the inconvenience.
