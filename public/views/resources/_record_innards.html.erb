@@ -4,6 +4,7 @@
 <%id_set="" %>
 
 <div class="upper-record-details">
+	<% if !@result.notes['abstract'].blank? %>
 	<%@result.notes['abstract'].each do |note_struct|
 		if !note_struct['note_text'].blank? %>
 			<div class="note">
@@ -13,7 +14,7 @@
 			</div>
 		<% end %>
 	<% end %>
-
+	<% end %>
 	<div class="row pb-2">
 		<div class="col-lg-6">
 			<% unless @result.extents.blank? %>

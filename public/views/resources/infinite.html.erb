@@ -22,6 +22,7 @@
         </div>
 
         <div id="sidebar" class="sidebar sidebar-container col-4 sticky-top">
+
           <% if AppConfig[:pui_search_collection_from_collection_organization] %>
             <%= render partial: 'shared/search_collection_form', :locals => {:resource_uri => @result['uri'], :action_text => t('actions.search_in', :type => t('resource._singular'))} %>
           <% end %>
@@ -31,7 +32,9 @@
           </div>
 
           <div class="border">
-            <ul id="sidebar-tree" class="py-2 pl-2">
+            <div style="text-align: center"></div>
+            <ul id="sidebar-tree" class="pb-2 pl-1">
+              <progress class="ml-1" style="visibility: visible;"></progress>
               <% current_depth = -1 %>
               <%@ordered_records.each_with_index { |single_record,idx| %>
 
@@ -39,13 +42,13 @@
                   <!--Root node-->
                   <% if single_record['depth'] == 0 %>
 
-                    <li id="root"><%=single_record['display_string'] %>
+                    <li id="root"><a href="<%= single_record['ref'] %>"><%=single_record['display_string'] %></a>
                     <% next %>
 
                    <!-- Sub-list for the current node-->
                   <% elsif single_record['depth'] > current_depth %>
                     <ul id="subtree">
-                      <li class=" list-unstyled" ><a href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
+                      <li class=" list-unstyled" ><span class="id-badge"></span><a href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
                     <% current_depth = single_record['depth'] %>
 
                     <!--End of the sub-list for the current node-->
@@ -56,12 +59,12 @@
                     </li>
                       <% current_depth -= 1 %>
                     <% end %>
-                    <li class=" list-unstyled" ><a class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
+                    <li class=" list-unstyled" ><span class="id-badge"></span><a class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a>
                       <% current_depth = single_record['depth'] %>
 
                     <!--Information for all nodes of the sub-list-->
                   <% else %>
-                    <li class=" list-unstyled"><a  class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a></li>
+                    <li class=" list-unstyled"><span class="id-badge"></span><a  class = "record-title" href="javascript:load_tree('<%= single_record['ref'] %>');"><%=single_record['display_string'] %></a></li>
                   <% end %>
 
                 <% end %>
@@ -78,6 +81,7 @@
 </main>
 
 <script>
+
 // Constructing sidebar tree
 $('#sidebar-tree').treed();
 
@@ -102,7 +106,21 @@ $.ajax({
                     content += " <div id=\"sub-list\">";
 
                     for (nodeData in nodesData) {
-                        content+="<p><a href="+nodesData[nodeData]['uri']+">"+nodesData[nodeData]['title']+ "</a></p>";
+                        //Fetching the identifiers for Contents
+                        let data_links=[];
+                        let recordId=[];
+                        data_links.push(nodesData[nodeData]['uri']);
+                        $.ajax({
+                            url: "<%=@result['json']['uri']%>/data_identifier",
+                            type: 'POST',
+                            dataType: 'json',
+                            async : false,
+                            data: {data_links:data_links},
+                            success: function (data) {
+                                recordId =  data['identifiers'];
+                            }
+                        });
+                        content+="<p><span>"+recordId[0]+"</span><a href="+nodesData[nodeData]['uri']+"> "+nodesData[nodeData]['title']+ "</a></p>";
 
                     }
 
@@ -111,6 +129,33 @@ $.ajax({
                 }
             }
         }
+
+    }
+});
+
+//Appending identifiers to sidebar
+let data_links = [];
+//Creating an array of all records that are not file or item level
+<%@ordered_records.each_with_index { |single_record,idx| %>
+  <% if single_record['level']!="file" && single_record['level']!= "item"%>
+    data_links.push("<%=single_record['ref'] %>");
+  <% end %>
+<% } %>
+//Fetching the identifiers for all records in the sidebar
+$.ajax({
+    url: "<%=@result['json']['uri']%>/data_identifier",
+    type: 'POST',
+    dataType: 'json',
+    data: {data_links:data_links},
+    success: function (data) {
+        let identifiers = data['identifiers'];
+        let i = 1;
+        $('.id-badge').each(function(){
+            $(this).text(identifiers[i]+" ");
+            i++;
+        });
+        //Hiding the progress bar
+        $('progress').css("visibility","hidden");
     }
 });
 </script>
@@ -193,7 +238,21 @@ $.ajax({
                           dataType: 'json',
                           async:false,
                               success: function(record_data){
-                                  content+="<p><a href="+nodesData[nodeData]['uri']+">"+record_data['display_string']+"</a></p>";
+                              //Fteching the identifiers for Content of the clicked record
+                              let data_links=[];
+                              let recordId=[];
+                              data_links.push(nodesData[nodeData]['uri']);
+                                  $.ajax({
+                                      url: "<%=@result['json']['uri']%>/data_identifier",
+                                      type: 'POST',
+                                      dataType: 'json',
+                                      async : false,
+                                      data: {data_links:data_links},
+                                      success: function (data) {
+                                          recordId =  data['identifiers'];
+                                      }
+                                  });
+                                  content+="<p><span>"+recordId[0]+"</span><a href="+nodesData[nodeData]['uri']+"> "+record_data['display_string']+"</a></p>";
                               }
                         });
                       }
@@ -205,13 +264,9 @@ $.ajax({
               }
             });
           }
-
-      });
-
-    }
-          });
-
-
+        });
+      }
+    });
   }
 
 </script>

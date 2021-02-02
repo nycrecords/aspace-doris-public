@@ -576,9 +576,11 @@
             row.data('level', 0);
             row.data('child_count', rootNode.child_count);
             row.data('jsonmodel_type', rootNode.jsonmodel_type);
-            row.find('.title').append($('<p>')
-                                              .addClass('record-title description')
-                                              .text(rootNode.title));
+            var identifier = "";
+
+            row.find('.title').append($('<a>').attr('href', TreeIds.link_url(rootNode.uri))
+                .addClass('record-title description')
+                .text(rootNode.title));
 
             rootList.append(row);
             self.appendWaypoints(row, null, rootNode.waypoints, rootNode.waypoint_size, 1);
@@ -693,8 +695,31 @@
                 }, 0);
             });
         } else {
-            self.doneLoading();
-            done_callback();
+            var data_links = [];
+            // Searching for links for each of the sub-records for collection
+            $("#tree-container").find("a").each(function () {
+                  data_links.push($(this).attr('href'));
+            });
+
+            //Making ajax call to fetch all identifiers for the uri's
+            $.ajax({
+                url: root_uri+"/data_identifier",
+                type: 'POST',
+                dataType: 'json',
+                data: { data_links: data_links},
+                success: function(data){
+                    let identifiers = data['identifiers'];
+                    let i=1;
+                    //Prepending identifiers to sidebar
+                    $('.id-badge').each(function(){
+                        $(this).text(identifiers[i]+" ");
+                       i++;
+                    });
+                    self.doneLoading();
+                    done_callback();
+
+                }
+            });
         }
     };
 
@@ -741,7 +766,9 @@
                 title.addClass("pl-"+level);
                 title.addClass("pr-1");
                 var strippedTitle = $("<div>").html(node.title).text();
-                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).prop('style','box-decoration-break:clone;').text(node.title)).addClass('text-justify');
+                title.append("<span class=\"id-badge text-dark\"></span>");
+                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title)).addClass('text-justify');
+
                 title.attr('title', strippedTitle);
 
                 var ex = row.find('.expandme');
@@ -953,7 +980,6 @@
         return isAllowed;
 
     };
-
 
     exports.LargeTree = LargeTree;
     exports.TreeDataSource = TreeDataSource;
