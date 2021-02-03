@@ -89,6 +89,12 @@
 		<%= render partial: 'shared/accordion_panel', locals: {:p_title => t('deaccessions'), :p_id => 'deaccessions_list', :p_body => x} %>
 	<% end %>
 
+	<% if @result.kind_of?(Resource) && !@result.finding_aid.blank? %>
+		<% x= render partial: 'resources/finding_aid' %>
+		<%= render partial: 'shared/accordion_panel', locals: {:p_title =>  t('resource._public.finding_aid.head'),
+																													 :p_id => 'fa', :p_body => x} %>
+	<% end %>
+
 	<% unless @result.subjects.blank? %>
 		<% x= render partial: 'resources/subject_list', locals: {:list => @result.subjects, :list_clss => 'subjects_list'} %>
 		<%= render partial: 'shared/accordion_panel', locals: {:p_title =>  t('subject._plural'),
