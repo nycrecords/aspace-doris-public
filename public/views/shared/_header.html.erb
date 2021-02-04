@@ -1,16 +1,15 @@
 <!-- For keyboard users -->
 <a class="sr-only sr-only-focusable skip-menu" href="#skip-header-target">Skip Header</a>
 <header id="global-header" role="banner">
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-
-  <% if Rails.env == 'development' %>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7JCJKC5XJ5"></script>
+  <% if AppConfig.has_key?('google_analytics_id') %>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= AppConfig[:google_analytics_id] %>"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-7JCJKC5XJ5');
+        gtag('config', '<%= AppConfig[:google_analytics_id] %>');
     </script>
   <% end %>
   <div class="bg-black text-white" id="nyc-top-header">
