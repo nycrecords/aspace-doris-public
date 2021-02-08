@@ -2,7 +2,7 @@
 <a class="sr-only sr-only-focusable skip-menu" href="#skip-header-target">Skip Header</a>
 <header id="global-header" role="banner">
 
-  <% if AppConfig[:google_analytics_id]%>
+  <% if AppConfig.has_key?("google_analytics_id".to_sym)%>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=<%= AppConfig[:google_analytics_id] %>"></script>
     <script>

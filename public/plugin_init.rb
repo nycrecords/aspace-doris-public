@@ -105,8 +105,23 @@ Rails.application.config.after_initialize do
   class ResourcesController
     # present a list of resources.  If no repository named, just get all of them.
     include ViewHelper
+
     def index
       @repo_id = params.fetch(:rid, nil)
+      #Fetching the list of repositories
+      @criteria = {}
+      @criteria['sort'] = "repo_sort asc"
+      @criteria['page_size'] = 100
+      @search_data =  archivesspace.search('primary_type:repository', 1, @criteria) || {}
+
+      @digital_objects_list = Array.new
+      @search_data['results'].each do |repo_list|
+        hash = ASUtils.json_parse(repo_list['json']) || {}
+        repo_uri = hash['uri']
+        #Fetching the raw data for all digital objects
+        @digital_objects_list.push(archivesspace.search_digital_objects("#{repo_uri}/digital_objects?",repo_uri,1,{},true))
+      end
+      #Fetching all the resources
       if @repo_id
         @base_search = "/repositories/#{@repo_id}/resources?"
         repo = archivesspace.get_record("/repositories/#{@repo_id}")
@@ -152,20 +167,10 @@ Rails.application.config.after_initialize do
           :no_res => true
       }
       @no_statement = true
-
-      @criteria = {}
-      @criteria['sort'] = "repo_sort asc"
-      @criteria['page_size'] = 100
-      @search_data =  archivesspace.search('primary_type:repository', 1, @criteria) || {}
-
-      @search_data['results'].each do |repo_list|
-        hash = ASUtils.json_parse(repo_list['json']) || {}
-        repo_uri = hash['uri']
-        #Fetching the raw data for all digital objects in the repository
-        digital_objects_list = Net::HTTP.get(URI("#{request.protocol}#{request.host}:#{request.port}#{repo_uri}/digital_objects/raw_json?limit=digital_object"))
-        #Pulling digital object linked record uris from raw data and converting them to a 1-D array
-        digital_list = JSON.parse(digital_objects_list)
-        @instance_uris = digital_list["results"]["records"].map{|x| x["raw"]["linked_instance_uris"]}.flatten
+      #Fetching the linked instances and converting to 1-D array
+      @digital_objects_list.each do |digital_instance|
+        flattened_instance = digital_instance["results"].map{|x| x["linked_instances"]}
+        @instance_uris =  flattened_instance.flatten.map{|x| x["ref"]}
         #Checking if record tree contains digital object linked record
         @has_digital_instances = Array.new
         @results.records.each do |result|
@@ -175,12 +180,25 @@ Rails.application.config.after_initialize do
         end
       end
       render 'search/resources_search_results'
-
     end
 
     def show
       uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
       begin
+        #Fetching the list of repositories
+        @criteria = {}
+        @criteria['sort'] = "repo_sort asc"
+        @criteria['page_size'] = 100
+        @search_data =  archivesspace.search('primary_type:repository', 1, @criteria) || {}
+
+        @digital_objects_list = Array.new
+        @search_data['results'].each do |repo_list|
+          hash = ASUtils.json_parse(repo_list['json']) || {}
+          repo_uri = hash['uri']
+          #Fetching the raw data for all digital objects
+          @digital_objects_list.push(archivesspace.search_digital_objects("#{repo_uri}/digital_objects?",params[:rid],1,{},true))
+        end
+        #Fetching the resource record
         @criteria = {}
         @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id', 'digital_object_uris:id']
 
@@ -193,16 +211,18 @@ Rails.application.config.after_initialize do
         @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
         @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
         fill_request_info
-        #Getting uris for the record tree
-        ordered_records = archivesspace.get_record(uri + '/ordered_records').json.fetch('uris')
-        @record_tree = ordered_records.map{|x| x["ref"]}
-        #Fetching the raw data for all digital objects in the repository
-        digital_objects_list = Net::HTTP.get(URI("#{request.protocol}#{request.host}:#{request.port}/repositories/#{params[:rid]}/digital_objects/raw_json?limit=digital_object"))
-        #Pulling digital object linked record uris from raw data and converting them to a 1-D array
-        digital_list = JSON.parse(digital_objects_list)
-        @instance_uris = digital_list["results"]["records"].map{|x| x["raw"]["linked_instance_uris"]}.flatten
-        #Checking if record tree contains digital object linked record
-        @has_digital_instance = !((@record_tree &  @instance_uris).empty?)
+
+        #Fetching the linked instances and converting to 1-D array
+        @digital_objects_list.each do |digital_instance|
+          flattened_instance = digital_instance["results"].map{|x| x["linked_instances"]}
+          @instance_uris =  flattened_instance.flatten.map{|x| x["ref"]}
+          #Checking if record tree contains digital object linked record
+          @has_digital_instance = Array.new
+          ordered_records = archivesspace.get_record(uri + '/ordered_records').json.fetch('uris')
+          @record_tree = ordered_records.map{|x| x["ref"]}
+          @has_digital_instance =  !((@record_tree &  @instance_uris).empty?)
+        end
+
       rescue RecordNotFound
         record_not_found(uri, 'resource')
       end
@@ -211,6 +231,20 @@ Rails.application.config.after_initialize do
     def infinite
       @root_uri = "/repositories/#{params[:rid]}/resources/#{params[:id]}"
       begin
+        #Fetching the list of repositories
+        @criteria = {}
+        @criteria['sort'] = "repo_sort asc"
+        @criteria['page_size'] = 100
+        @search_data =  archivesspace.search('primary_type:repository', 1, @criteria) || {}
+
+        @digital_objects_list = Array.new
+        @search_data['results'].each do |repo_list|
+          hash = ASUtils.json_parse(repo_list['json']) || {}
+          repo_uri = hash['uri']
+          #Fetching the raw data for all digital objects
+          @digital_objects_list.push(archivesspace.search_digital_objects("#{repo_uri}/digital_objects?",repo_uri,1,{},true))
+        end
+        #Fetching the infinite record
         @criteria = {}
         @criteria['resolve[]']  = ['repository:id', 'resource:id@compact_resource', 'top_container_uri_u_sstr:id', 'related_accession_uris:id']
         @result =  archivesspace.get_record(@root_uri, @criteria)
@@ -220,15 +254,18 @@ Rails.application.config.after_initialize do
         @page_title = "#{I18n.t('resource._singular')}: #{strip_mixed_content(@result.display_string)}"
         @context = [{:uri => @repo_info['top']['uri'], :crumb => @repo_info['top']['name']}, {:uri => nil, :crumb => process_mixed_content(@result.display_string)}]
         fill_request_info
-        @ordered_records = archivesspace.get_record(@root_uri + '/ordered_records').json.fetch('uris')
-        @record_tree = @ordered_records.map{|x| x["ref"]}
-        #Fetching the raw data for all digital objects in the repository
-        digital_objects_list = Net::HTTP.get(URI("#{request.protocol}#{request.host}:#{request.port}/repositories/#{params[:rid]}/digital_objects/raw_json?limit=digital_object"))
-        #Pulling digital object linked record uris from raw data and converting them to a 1-D array
-        digital_list = JSON.parse(digital_objects_list)
-        @instance_uris = digital_list["results"]["records"].map{|x| x["raw"]["linked_instance_uris"]}.flatten
-        #Checking if record tree contains digital object linked record
-        @has_digital_instance = !((@record_tree &  @instance_uris).empty?)
+
+        #Fetching the linked instances and converting to 1-D array
+        @digital_objects_list.each do |digital_instance|
+          flattened_instance = digital_instance["results"].map{|x| x["linked_instances"]}
+          @instance_uris =  flattened_instance.flatten.map{|x| x["ref"]}
+          #Checking if record tree contains digital object linked record
+          @has_digital_instance = Array.new
+          @ordered_records = archivesspace.get_record(@root_uri + '/ordered_records').json.fetch('uris')
+          @record_tree = @ordered_records.map{|x| x["ref"]}
+          @has_digital_instance = !((@record_tree &  @instance_uris).empty?)
+        end
+
       rescue RecordNotFound
         record_not_found(uri, 'resource')
       end
@@ -572,45 +609,15 @@ Rails.application.config.after_initialize do
       end
     end
   end
-  class ObjectsController
-    def raw_json
-      repo_id = params.fetch(:rid, nil)
-      if !params.fetch(:q,nil)
-        params[:q] = ['*']
-        params[:limit] = 'digital_object,archival_object' unless params.fetch(:limit,nil)
-        params[:op] = ['OR']
-      end
-      page = Integer(params.fetch(:page, "1"))
-      search_opts = default_search_opts(DEFAULT_OBJ_SEARCH_OPTS)
-      search_opts['fq'] = ["repository:\"/repositories/#{repo_id}\""] if repo_id
-      @base_search = repo_id ? "/repositories/#{repo_id}/objects?" : '/objects?'
 
-      begin
-        set_up_and_run_search( params[:limit].split(","), DEFAULT_OBJ_FACET_TYPES, search_opts, params)
-      rescue NoResultsError
-        flash[:error] = I18n.t('search_results.no_results')
-        redirect_back(fallback_location: '/') and return
-      rescue Exception => error
-        flash[:error] = I18n.t('errors.unexpected_error')
-        redirect_back(fallback_location: '/objects' ) and return
-      end
+  class ArchivesSpaceClient
 
-      @context = repo_context(repo_id, 'record')
-      if @results['total_hits'] > 1
-        @search[:dates_within] = true if params.fetch(:filter_from_year,'').blank? && params.fetch(:filter_to_year,'').blank?
-        @search[:text_within] = true
-      end
-      @sort_opts = []
-      all_sorts = Search.get_sort_opts
-      all_sorts.delete('relevance') unless params[:q].size > 1 || params[:q] != '*'
-      all_sorts.keys.each do |type|
-        @sort_opts.push(all_sorts[type])
-      end
+    def search_digital_objects(base, repo_id, page = 1, search_opts = {},use_get=false)
+      search_opts = DEFAULT_SEARCH_OPTS.merge(search_opts)
 
-      @page_title = I18n.t('record._plural')
-      @results_type = @page_title
-      @no_statement = true
-      render json: { results:@results }
+      url = build_url(base,search_opts.merge(:page => page))
+      results = do_search(url,use_get)
+
     end
   end
 
