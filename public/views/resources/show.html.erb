@@ -1,7 +1,8 @@
 <main id="skip-header-target" role="main">
   <section class="py-3 d-flex justify-content-center">
     <div class="container-fluid mx-3 description">
-      <%= render partial: 'resources/idbadge', locals: {:result => @result,:props => { :full => true},:pad =>true } %>
+
+      <%= render partial: 'resources/idbadge', locals: {:result => @result,has_digital_instance:(@has_digital_instance),:props => { :full => true},:pad =>true } %>
 
       <div class="row px-5 matrix-gutter justify-content-center">
         <%= render partial: 'resources/resource_alltabs' %>

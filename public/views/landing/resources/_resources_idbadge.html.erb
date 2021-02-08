@@ -43,6 +43,7 @@
   <a class="record-title" href="<%= app_prefix(url) %>">
     <%== props.fetch(:infinite_item, false) ? result.parse_full_title(true) : result.display_string %>
   </a>
+  <%if has_digital_instance %><span id="digital_object_indicator" data-toggle="tooltip" title="Digitized items available"><i class="fas fa-magic"></i></span><% end %>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <div><small><b><%=t('resource._singular') %> <%= comp_id %></b></small></div>
 <% else %>

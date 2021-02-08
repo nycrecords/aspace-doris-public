@@ -4,9 +4,8 @@
 
     <div class="container-flex mx-6 description">
 
-
       <div class="information col-sm-7">
-      <%= render partial: 'resources/idbadge', locals: {:result => @result, :props => { :full => true} } %>
+      <%= render partial: 'resources/idbadge', locals: {:result => @result,:has_digital_instance => @has_digital_instance,:props => { :full => true} } %>
       </div>
 
       <%= render partial: 'resources/resource_alltabs' %>
