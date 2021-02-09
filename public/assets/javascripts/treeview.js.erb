@@ -23,8 +23,8 @@ $.fn.extend({
             branch.addClass('branch');
             branch.on('click', function (e) {
                 if (this == e.target) {
-                    var icon = $(this).children('i:first');
-                    icon.toggleClass(openedClass + " " + closedClass);
+                    var icon = $(this).children('span:first');
+                    icon.toggleClass(openedClass+" "+closedClass);
                     $(this).children().children().toggle();
                 }
             })

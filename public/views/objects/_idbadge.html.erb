@@ -54,7 +54,7 @@
 <div class="badge-and-identifier mb-1">
   <%if !result['json'].has_key?("component_id_inherited") %><a href="<%=url%>"> <% end %>
   <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %> d-inline-block <%if result['json'].has_key?("component_id_inherited") %>mr-1<% end %>">
-    <i class="<%= icon_for_type(result.primary_type) %>"></i>&#160;<%= badge_label %><% if result.container_summary_for_badge %> &mdash; <%= result.container_summary_for_badge %> <% else %>:<% end %>
+    <i class="<%= icon_for_type(result.primary_type) %>"></i><% if result.container_summary_for_badge %> <%= result.container_summary_for_badge %> <% else %>&#160;<%= badge_label %>:<% end %>
   </div>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <% unless comp_id.blank? %>

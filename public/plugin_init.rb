@@ -104,6 +104,11 @@ Rails.application.config.after_initialize do
 
   class ResourcesController
     # present a list of resources.  If no repository named, just get all of them.
+          DEFAULT_OBJ_SEARCH_OPTS = {
+              'resolve[]' => ['repository:id', 'resource:id@compact_resource', 'ancestors:id@compact_resource', 'top_container_uri_u_sstr:id'],
+              'facet.mincount' => 1,
+              'sort' =>  'title_sort asc'
+          }
     include ViewHelper
     def index
       @repo_id = params.fetch(:rid, nil)
@@ -182,11 +187,13 @@ Rails.application.config.after_initialize do
 
 
     def get_dataid
+
       data_links = params[:data_links]
       identifiers=[];
       data_links.each do |data_link|
         #Fetching the records for the uri
-        raw_data=archivesspace.get_record(data_link)
+        search_opts = default_search_opts(DEFAULT_OBJ_SEARCH_OPTS)
+        raw_data=archivesspace.get_record(data_link,search_opts)
         badge_label="";
         #Creating the identifier
         if raw_data.level
@@ -202,14 +209,15 @@ Rails.application.config.after_initialize do
         end
 
         if raw_data.container_summary_for_badge
-          badge_label+="-"+raw_data.container_summary_for_badge
-        else
-          badge_label+=":"
+          badge_label = raw_data.container_summary_for_badge
         end
 
         comp_id = display_component_id(raw_data,true)
         unless comp_id.blank?
-          badge_label+= comp_id
+          badge_label+= " "+comp_id
+          unless raw_data.container_summary_for_badge
+            badge_label+= ": "
+          end
         end
         #Adding identifier to array of identifiers
         identifiers.push(badge_label);
