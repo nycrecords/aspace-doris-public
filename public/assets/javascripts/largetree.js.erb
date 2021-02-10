@@ -442,6 +442,8 @@
         var self = this;
         var button = row.find('.expandme');
 
+        $(button).removeClass('fa-chevron-right');
+        $(button).addClass('fa-chevron-down');
         if (button.data('expanded')) {
             if (done_callback) {
                 done_callback();
@@ -478,6 +480,8 @@
 
         var button = row.find('.expandme');
 
+        $(button).removeClass('fa-chevron-down');
+        $(button).addClass('fa-chevron-right');
         $(button).data('expanded', false);
         button.find('.expandme-icon').removeClass('expanded');
 
@@ -763,18 +767,18 @@
                 row.data('child_count', node.child_count);
                 row.css('height','auto')
                 var title = row.find('.title');
-                title.addClass("pl-"+level);
+                title.addClass("pl-"+(level+1));
                 title.addClass("pr-1");
                 var strippedTitle = $("<div>").html(node.title).text();
                 title.append("<span class=\"id-badge text-dark\"></span>");
-                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title)).addClass('text-justify');
+                title.append($('<a class="record-title" />').prop('href', TreeIds.link_url(node.uri)).text(node.title));
 
                 title.attr('title', strippedTitle);
 
                 var ex = row.find('.expandme');
                 ex.attr('aria-label', 'expand element');
                 if (node.child_count === 0) {
-                    row.find('.record-title').addClass('p-1');
+                    row.find('.record-title').addClass('py-1');
                     row.find('.indentor').remove();
                 }
 
