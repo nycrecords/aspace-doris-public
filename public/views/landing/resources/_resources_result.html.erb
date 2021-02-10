@@ -5,7 +5,7 @@
   <td class="p-2">
     <a href="<%= result.uri %>"></a>
 <% end %>
-<%= render partial: 'landing/resources/resources_idbadge', locals: {:result => result, :props => props } %>
+<%= render partial: 'landing/resources/resources_idbadge',locals: {:result => result,:has_digital_instance => has_digital_instance ,:props => props } %>
 
 <p>
   <% note_struct = result.note('abstract')

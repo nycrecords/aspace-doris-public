@@ -7,6 +7,7 @@
     <%= render partial: 'shared/breadcrumbs' %>
   </div>
 </div>
+
 <% if defined?(@results) %>
   <div class="row" style = "display: none">
     <div class="col-sm-9">
@@ -52,10 +53,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% @results.records.each do |result|
+                      <% @results.records.each_with_index { |result, idx|
                         subjects_info += result['json']['subjects']%>
-                        <%= render partial: 'landing/resources/resources_result', locals: {:result => result, :props => (@result_props || {}).merge({:full => false})} %>
-                      <% end %>
+                        <%= render partial: 'landing/resources/resources_result', locals: {:result => result, :has_digital_instance => @has_digital_instances[idx],:props => (@result_props || {}).merge({:full => false})} %>
+                      <% } %>
                     </tbody>
                   </table>
 <!--                  Extracting names and their types and storing them as hash-->
@@ -88,3 +89,8 @@
           </section>
         </main>
 <% end %>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

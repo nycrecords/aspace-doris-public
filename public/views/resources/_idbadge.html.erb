@@ -50,6 +50,7 @@ end
   <% else %>
     <%== result.display_string %>
   <% end %>
+  <%if has_digital_instance %><span id="digital_object_indicator" data-toggle="tooltip" title="Digitized items available"><i class="fas fa-magic"></i></span><% end %>
 </h2>
 
 <%@result.classifications.each do |c|
@@ -59,3 +60,8 @@ end
     <p class="mb-1 <% if defined? (pad) %>pl-5<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), '/classifications#recordrow-'+crumb.fetch(:crumb).split('.')[0].downcase.parameterize.underscore,class: 'description' %></p>
   <%end
 end %>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
