@@ -5,14 +5,16 @@
     <dl class="dl-horizontal-fa">
       <% order.each do |item| %>
         <% unless @result.finding_aid[item].blank? %>
+          <% unless item == "script" ||  item == "language_note"%>
           <dt><%= t("resource._public.finding_aid.#{item}") %></dt>
+          <% end %>
       	  <dd>
             <% if item == "status" %>
               <%= t("resource_finding_aid_status.#{@result.finding_aid[item]}") %>
             <% elsif item == "language" %>
-              <%= t("enumerations.language_iso639_2.#{@result.finding_aid[item]}") %>
-            <% elsif item == "script" %>
-              <%= t("enumerations.script_iso15924.#{@result.finding_aid[item]}") %>
+              <%= t("enumerations.language_iso639_2.#{@result.finding_aid['language_note']}") %>
+            <% elsif item == "script" ||  item == "language_note"%>
+                <% next %>>
             <% elsif item == "description_rules" %>
               <%= t("enumerations.resource_finding_aid_description_rules.#{@result.finding_aid[item]}") %>
             <% else %>
