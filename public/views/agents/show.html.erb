@@ -37,24 +37,24 @@
         <!-- Side bar -->
         <div class="col-3">
           <% if @result.json['names'].length > 1 %>
-            <h3>Other Names</h3>
+            <h3 class="h4">Other Names</h3>
             <% other_names = @result.json['names'].reject{|name| name['is_display_name']}.collect{|name| name['sort_name']} %>
-            <%= render partial: 'shared/present_list', locals: {:list =>  other_names, :list_clss => 'other_names'} %>
+            <%= render partial: 'shared/present_list', locals: {:list =>  other_names, :list_clss => 'other_names',:heading_size => "h5"} %>
             <br>
           <% end %>
           <% if @result.respond_to?(:related_agents) && !ASUtils.wrap(@result.related_agents).empty? %>
-            <h3>Related Names</h3>
+            <h3 class="h4">Related Names</h3>
             <%= render partial: 'agents/related_agents', locals: {:related_agents => @result.related_agents, :list_clss => 'related_agents'} %>
             <br>
           <% end %>
           <% unless @result.external_documents.blank? %>
-            <h3>External Documents</h3>
-            <%= render partial: 'shared/present_list_external_docs', locals: {:list =>  @result.external_documents, :list_clss => 'external_docs'} %>
+            <h3 class="h4">External Documents</h3>
+            <%= render partial: 'shared/present_list_external_docs', locals: {:list =>  @result.external_documents, :list_clss => 'external_docs',:heading_size => "h5"} %>
             <br>
           <% end %>
 
           <div id="agent-facets" <% if @facets.blank? %>class="hidden"<% end %>>
-            <h3>Filter by:</h3>
+            <h3 class="h4">Filter by:</h3>
             <div class="bg-light p-3">
               <%= render partial: 'agents/only_facets' %>
             </div>

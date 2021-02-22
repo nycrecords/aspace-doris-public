@@ -50,7 +50,7 @@
 
         <!-- Side bar-->
         <div class="col-3">
-          <h3>Subject Term Details</h3>
+          <h3 class="h4">Subject Term Details</h3>
           <% if !(terms = ASUtils.wrap(@result['json']['terms'])).empty? %>
             <%= render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>
           <% end %>
@@ -63,7 +63,7 @@
           <% end %>
           <br>
           <div id="subject-facets" <% if @facets.blank? %>class="hidden"<% end %>>
-            <h3>Filter by:</h3>
+            <h3 class="h4">Filter by:</h3>
             <div class="bg-light p-3">
               <%= render partial: 'subjects/only_facets' %>
             </div>
