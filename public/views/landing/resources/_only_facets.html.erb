@@ -1,6 +1,8 @@
 <% unless @facets.blank? %>
   <%facets_type= Hash.new %>
   <%h=Hash.new%>
+  <!--Filters sidebar order-->
+  <% facet_subgroup_order = ["topical","name_corporate_entity","name_person","geographic","genre_form","occupation"] %>
   <dl id="facets">
     <%
       preferred_facet_order = %w(repository primary_type agents subjects)
@@ -43,6 +45,7 @@
               facets_type[type_info[v]][v] =ct
             end
           end %>
+    <%facets_type = facets_type.sort_by{ |key,val| facet_subgroup_order.index(key)}%>
       <%facets_type.each do |facet_type,h| %>
 
         <% if(facet_type == "temporal")
@@ -51,16 +54,16 @@
           next unless h %>
         <% case facet_type
             when "topical"
-              title = "Topic"
+              title = "Topics"
               type="subjects"
            when "genre_form"
-             title = "Material Type"
+             title = "Material Types"
              type="subjects"
            when "geographic"
-             title = "Location"
+             title = "Locations"
              type="subjects"
            when "occupation"
-             title = "Occupation"
+             title = "Occupations"
              type="subjects"
            when "name_person"
              title = "People"
