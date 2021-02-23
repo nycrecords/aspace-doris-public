@@ -25,8 +25,8 @@ en:
     welcome_page_title: ""
 
   bulk:
-    _singular: "Majority of material found in %{dates}"
-    _plural: "Majority of material found within %{dates}"
+    _singular: "bulk %{dates}"
+    _plural: "bulk %{dates}"
 
   navbar:
     search_placeholder: Search by keyword
