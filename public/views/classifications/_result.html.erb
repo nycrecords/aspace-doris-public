@@ -30,11 +30,18 @@
         <% end %>
 
         <% linked_records_types.each do |rec_type,rec| %>
-
+<!--          Changing identifier from resource to collection-->
+          <% if rec_type.downcase == "resource" %>
+            <% rec_type = "collection" %>
+          <% end %>
          <div class="accordion-group ml-2 mb-2 col-sm" role="tablist" id="accordion-<%=index %>-<%=rec_type %>">
            <div class="card">
              <a class="card-header bg-white collapse collapsed" id="acc-button-<%=index %>-<%=rec_type %>" data-toggle="collapse" href="#panel-acc-button-<%=index %>-<%=rec_type %>" role="tab" aria-expanded="false" aria-controls="panel-acc-button-<%=index %>-<%=rec_type %>">
-               <span class="title" role="heading" aria-level="3"><%=rec.length %> Related <%=rec_type.pluralize.capitalize() %></span>
+               <% if rec.length > 1 %>
+                <span class="title" role="heading" aria-level="3"><%=rec.length %> Related <%=rec_type.pluralize.capitalize() %></span>
+               <% else %>
+                <span class="title" role="heading" aria-level="3"><%=rec.length %> Related <%=rec_type.capitalize() %></span>
+               <% end %>
              </a>
 
              <div class="bg-white collapse " id="panel-acc-button-<%=index %>-<%=rec_type %>" role="tabpanel" aria-labelledby="acc-button-<%=index %>-<%=rec_type %>" data-parent="#accordion-<%=index %>-<%=rec_type %>" style="">
@@ -203,9 +210,14 @@
 
                                                     content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-resource\">\n" +
                                                         "<div class=\"card\">\n" +
-                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-resource\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-resource\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-resource\">\n" +
-                                                        "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + collection_idxs.length + " Related Collections</span>\n" +
-                                                        "</a>\n" +
+                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-resource\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-resource\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-resource\">\n";
+                                                    if(collection_idxs.length > 1) {
+                                                        content += "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + collection_idxs.length + " Related Collections</span>\n";
+                                                    }
+                                                    else {
+                                                        content += "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + collection_idxs.length + " Related Collection</span>\n";
+                                                    }
+                                                    content += "</a>\n" +
                                                         "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-resource\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-resource\" data-parent=\"#accordion-" + identifier + "-resource\">\n" +
                                                         "<div class=\"card-body\">\n" +
                                                         "<table class=\"table pl-2\">\n" +
@@ -240,9 +252,14 @@
 
                                                     var content = "<div class=\"accordion-group  ml-2 col-sm\" role=\"tablist\" id=\"accordion-" + identifier + "-classification\">\n" +
                                                         "<div class=\"card\">\n" +
-                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-classification\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-classification\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-classification\">\n" +
-                                                        "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + accessions_idxs.length + " Related Accessions</span>\n" +
-                                                        "</a>\n" +
+                                                        "<a class=\"card-header bg-white collapse collapsed\" id=\"acc-button-" + identifier + "-classification\" data-toggle=\"collapse\" href=\"#panel-acc-button-" + identifier + "-classification\" role=\"tab\" aria-expanded=\"false\" aria-controls=\"panel-acc-button-" + identifier + "-classification\">\n" ;
+                                                    if(accessions_idxs.length > 1) {
+                                                        content += "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + accessions_idxs.length + " Related Accessions</span>\n";
+                                                    }
+                                                    else {
+                                                        content += "<span class=\"title\" role=\"heading\" aria-level=\"3\">" + accessions_idxs.length + " Related Accession</span>\n";
+                                                    }
+                                                    content += "</a>\n" +
                                                         "<div class=\"collapse bg-white\" id=\"panel-acc-button-" + identifier + "-classification\" role=\"tabpanel\" aria-labelledby=\"acc-button-" + identifier + "-classification\" data-parent=\"#accordion-" + identifier + "-classification\">\n" +
                                                         "<div class=\"card-body\">\n" +
                                                         "<table class=\"table pl-2\">\n" +
