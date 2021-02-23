@@ -93,10 +93,12 @@
         </div>
           <% if !params[:reset]==true %>
         <div class="col-sm-3 ml-1 ">
-          <h2 class="h4">Filter by:</h2>
-          <div class="bg-light p-3">
-            <%= render partial: 'search/only_facets' %>
-          </div>
+          <% unless @facets.blank? %>
+            <h2 class="h4">Filter by:</h2>
+            <div class="bg-light p-3">
+              <%= render partial: 'search/only_facets' %>
+            </div>
+            <% end %>
         </div>
       </div>
           <% end %>
