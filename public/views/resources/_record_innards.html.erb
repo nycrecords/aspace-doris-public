@@ -1,7 +1,6 @@
 <!-- Look for '_inherited' and '*_inherited' properties -->
 <% non_folder = %w(summary langmaterial accessrestrict userestrict bioghist) %>
-<% folder = %w(abstract arrangement phystech physloc otherfindaid custodhist acqinfo appraisal accruals originalsloc altformavail extent relatedmaterial separatedmaterial note_bibliography materialspec physdesc inscription physfacet dimensions edition fileplan legalstatus odd note processinfo note_index) %>
-<%id_set="" %>
+<% folder = %w(phystech physloc otherfindaid custodhist acqinfo appraisal accruals originalsloc altformavail extent relatedmaterial separatedmaterial note_bibliography materialspec physdesc inscription physfacet dimensions edition fileplan legalstatus odd note processinfo note_index) %><%id_set="" %>
 
 <div class="upper-record-details">
 	<% if !@result.notes['abstract'].blank? %>
@@ -66,6 +65,11 @@
 </div>
 
 <div class="accordion-group my-3" role="tablist" id="accordion-01">
+	<% x = render partial: 'shared/multi_notes', locals: {:types => folder,:title_desc => '4'} %>
+	<% unless x.blank? %>
+		<%= render partial: 'shared/accordion_panel', locals: {:p_title =>  t('resource._public.additional'),
+																													 :p_id => 'add_desc', :p_body => x } %>
+	<% end %>
 	<%unless  @result.notes['scopecontent'].blank?%>
 		<% x = render partial: 'shared/multi_notes', locals: {:types => %w(scopecontent),:notitle=> true} %>
 		<%= render partial: 'shared/accordion_panel', locals: {:p_title => 'Scope and Content Note',

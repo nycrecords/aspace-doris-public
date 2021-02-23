@@ -3,7 +3,7 @@
 	   if !note_struct['note_text'].blank? %>
 	    <div class="note">
 	      <%= render  partial: 'shared/single_note',
-	          locals: {:type => type, :note_struct => note_struct,:notitle =>(defined?(notitle))? notitle : false}  %>
+	          locals: {:type => type, :note_struct => note_struct,:notitle =>(defined?(notitle))? notitle : false,:title_desc =>(defined?(title_desc))? title_desc : nil}  %>
 	    </div>
 	   <% end %>
 	<% end %>
