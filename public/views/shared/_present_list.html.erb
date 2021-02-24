@@ -1,7 +1,7 @@
 <% if list.kind_of? Hash
    list.each do |k,v| %>
     <%=((defined?(heading_size))? "<h"+heading_size+">": '<h3>').html_safe %><%= k %> <%=((defined? (heading_size))? "</h"+heading_size+">" : '</h3>').html_safe%>
-   <ul class="present_list <%= list_clss %>">
+   <ul class="present_list <%= list_clss %> <% if defined?(heading_size) %>small<% end %>">
    <% v.each do |item | %>
      <li>
      <% unless item['inherit'].blank? %>
@@ -19,7 +19,7 @@
    </ul>
   <% end %>
 <% else %>
-  <ul class="present_list <%= list_clss %>">
+  <ul class="present_list <%= list_clss %> <% if defined?(heading_size) %>small<% end %>">
     <% list.each do |item| %>
      <li>
        <% if list_clss == 'subjects_list' && item['jsonmodel_type'].start_with?('agent_') %>

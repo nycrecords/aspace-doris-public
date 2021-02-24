@@ -8,7 +8,7 @@
 
 <% grouped_relationships.each do |type, relationships| %>
   <h4 class="h5"><%= I18n.t("#{type}._singular") %></h4>
-  <ul class="present_list unstyled-list">
+  <ul class="present_list unstyled-list small">
     <% relationships.each do |relationship| %>
       <% agent = relationship['_resolved'] %>
       <li class="pb-1">
