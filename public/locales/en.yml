@@ -50,6 +50,13 @@ en:
     op_first_row:
       NOT: Not
     results_head: "%{start} - %{end} of %{total} %{type}"
+    filter:
+      primary_type:
+        _singular: Type
+      subjects:
+        _singular: Subject
+      published_agents:
+        _singular: Name
   actions:
     collection_overview: Overview
 
@@ -64,3 +71,17 @@ en:
 
   errors:
     backend_down_message: ArchivesSpace is currently experiencing technical difficulties. We apologise for the inconvenience.
+
+  agent_person:
+    _plural: People
+
+  agent_family:
+    _plural: Families
+
+  agent_corporate_entity:
+    _plural: Organizations
+
+  agent_software:
+    _plural: Softwares
+
+

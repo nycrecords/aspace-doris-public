@@ -52,9 +52,9 @@
   <% end %>
 </h2>
 <div class="badge-and-identifier mb-1">
-  <%if !result['json'].has_key?("component_id_inherited") %><a href="<%=url%>"> <% end %>
+  <%if !result['json'].has_key?("component_id_inherited") %><a href="<%=url%>"><% end %>
   <div class="record-type-badge <%= (result.primary_type.start_with?('agent') ? 'agent' : result.primary_type) %> d-inline-block <%if result['json'].has_key?("component_id_inherited") %>mr-1<% end %>">
-    <i class="<%= icon_for_type(result.primary_type) %>"></i><% if result.container_summary_for_badge %> <%= result.container_summary_for_badge %> <% else %>&#160;<%= badge_label %>:<% end %>
+    <i class="<%= icon_for_type(result.primary_type) %>"></i><% if result.container_summary_for_badge %><%= result.container_summary_for_badge.delete! ':' %> <% else %><%= badge_label %>:<% end %>
   </div>
   <% comp_id = display_component_id(result, props.fetch(:infinite_item, false)) %>
   <% unless comp_id.blank? %>
@@ -63,7 +63,7 @@
         <b>
           <a href="<%=result['json']['component_id_inherited']['ref'] %>">
         <span class="id-label">
-            <%=result['json']['component_id_inherited']['level']%>:
+            <%=result['json']['component_id_inherited']['level']%>
         </span>
         <span class="component">
             <%= comp_id %>
