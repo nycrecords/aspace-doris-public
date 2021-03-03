@@ -1,13 +1,22 @@
 <main id="skip-header-target" role="main">
   <section class="py-3 justify-content-center">
-    <div class="container-flex mx-6 description">
+    <% if device_type == 'mobile' %>
+      <div class="container-flex mx-4 description">
+    <% else %>
+      <div class="container-flex mx-6 description">
+    <% end %>
+
     <div class="information col-sm-9">
       <%= render partial: 'objects/idbadge', locals: {:result => @result, :props => { :full => true} } %>
     </div>
 
   <div class="row" id="notes_row">
     <%= render partial: 'shared/digital', locals: {:dig_objs => @dig} %>
-   <div class="col-8 pl-3">
+    <% if device_type == 'mobile' %>
+      <div class="col-12 pl-3">
+    <% else %>
+      <div class="col-8 pl-3">
+    <% end %>
     <% if  defined?(comp_id) && !comp_id && !@result['json']['ref_id'].blank? %>
       <span class='ref_id'>[<%=  t('archival_object._public.header.ref_id') %>: <%= @result['json']['ref_id'] %>]</span>
     <% end %>
@@ -17,7 +26,11 @@
    </div>
 
    <% if !@result.instance_of?(DigitalObject) || @has_children %>
-    <div id="sidebar" class="sidebar sidebar-container col-4 resizable-sidebar">
+      <% if device_type == 'mobile' %>
+        <div id="sidebar" class="sidebar sidebar-container col-12 resizable-sidebar">
+      <% else %>
+        <div id="sidebar" class="sidebar sidebar-container col-4 resizable-sidebar">
+      <% end %>
       <%
         if @result.kind_of?(DigitalObject)
           heading_text = t('dig_cont_arr')
