@@ -7,13 +7,21 @@
 %>
 
 <% grouped_relationships.each do |type, relationships| %>
-  <h4 class="h5"><%= I18n.t("#{type}._singular") %></h4>
+  <% agent_types=Hash.new { |h, k| h[k] = [] } %>
+  <h4 class="h5 pt-1"><%= I18n.t("#{type}._singular") %></h4>
   <ul class="present_list unstyled-list small">
-    <% relationships.each do |relationship| %>
-      <% agent = relationship['_resolved'] %>
+  <%
+    relationships.each do |relationship|
+      agent_types[relationship['_resolved']['jsonmodel_type']].push(relationship['_resolved'])
+    end
+  %>
+  <% agent_types.each do |agent_type,related_agents| %>
+    <b><%= I18n.t("#{agent_type}._plural") %></b>
+    <%related_agents.each do |agent| %>
       <li class="pb-1">
-        <%= link_to agent['display_name']['sort_name'], app_prefix(agent['uri']) %> - Related <%= I18n.t("#{agent['jsonmodel_type']}._singular") %>
+        <%= link_to agent['display_name']['sort_name'], app_prefix(agent['uri']) %>
       </li>
     <% end %>
+  <% end %>
   </ul>
 <% end %>

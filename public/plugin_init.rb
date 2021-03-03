@@ -327,7 +327,8 @@ Rails.application.config.after_initialize do
         end
 
         if raw_data.container_summary_for_badge
-          badge_label = raw_data.container_summary_for_badge
+          badge_label = raw_data.container_summary_for_badge.delete! ':'
+          badge_label += ':'
         end
 
         comp_id = display_component_id(raw_data,true)

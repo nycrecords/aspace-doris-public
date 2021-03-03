@@ -23,7 +23,7 @@
     <%if type=="repository" %>
       <% next %>
     <% end %>
-    <h3 class="h5"><%= t("search_results.filter.#{type}") %></h3>
+    <h3 class="h5"><%= t("search_results.filter.#{type}._singular") %></h3>
     <ul class="small">
       <% facet_count = 0 %>
       <% h.each do |v, ct| %>

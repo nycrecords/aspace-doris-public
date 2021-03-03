@@ -93,7 +93,7 @@
             <div class="col-lg mb-3 mb-lg-0">
               <ul class="extensible-list">
                 <li>
-                  <strong>&#169; 2020 ArchivesSpace</strong>
+                  <strong>&#169; <%= DateTime.now.year %> ArchivesSpace</strong>
                 </li>
                 <li>
                   <a class="text-reset" href="http://archivesspace.org/">
@@ -115,7 +115,7 @@
           <a class="mb-2" href="https://www1.nyc.gov" title="Go to nyc.gov" target="_blank">
             <img class="mb-2" src="<%= AppConfig[:public_proxy_prefix] %>assets/images/nyc-bubble-logo.svg" width="90" alt="NYC Logo">
           </a>
-          <p class="fs-sm">City of New York - 2019 All Rights Reserved. NYC is a trademark and service
+          <p class="fs-sm">City of New York - <%= DateTime.now.year %> All Rights Reserved. NYC is a trademark and service
             mark of the City of New York.</p>
           <ul class="extensible-list horizontal fs-sm">
             <li>
