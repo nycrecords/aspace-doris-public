@@ -1,0 +1,71 @@
+<section id="content">
+  <div class="row">
+    <div class="col-12">
+      <a name="main" title="Main Content"></a>
+      <main id="skip-header-target" role="main">
+        <section class="py-3">
+          <div class="contact_form">
+            <div class="row matrix-gutter">
+              <div class="justify-content-center align-items-center container ">
+                <div class="w-75 mx-auto mb-2">
+                  <h2>Contact Us</h2>
+                  <p class="small">Contact us to start your research at the Municipal Archives.</p>
+                  <hr/>
+                </div>
+                <div class="align-content-center">
+              <%= form_with url: "/send_request", method:"post" ,:html => {:class=>'w-75 form-style mx-auto'} do |form| %>
+                <div class="form-group">
+                  <%= form.label :name, "Name" , :style => "color:#181A7B;font-weight:bold" %>
+                  <%= form.text_field :name , class: "form-control",:required => true%>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label :email_address , "Email", :style => "color:#181A7B;font-weight:bold"%>
+                  <%= form.email_field :email_address , class: "form-control"%>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label :description , "Description" , :style => "color:#181A7B;font-weight:bold"%>
+                  <%= form.text_area :description,size: "70x5" , class: "form-control" , placeholder: "Please describe the materials you would like to research." , :required => true%>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label :subject , "Collections" , :style => "color:#181A7B;font-weight:bold"%>
+                    <%= select_tag 'research_request[collections]' , options_from_collection_for_select(@research_links.collections,:title,:title) , size:3 , multiple:true %>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label :subject , "Accessions", :style => "color:#181A7B;font-weight:bold"%>
+                  <%= select_tag 'research_request[accessions]' , options_from_collection_for_select(@research_links.accessions,:title,:title) , size: 3 , multiple:true %>
+                </div>
+
+                <div class="form-group">
+                  <%= form.label :additional_links , "Additional links", :style => "color:#181A7B;font-weight:bold"%>
+                  <%= form.text_area :additional_links , size: "70x5" , class: "form-control",placeholder: " Please share any links to specific series or files you are interested in viewing. "%>
+                </div>
+                <%= form.submit "Submit" , class: "btn btn-primary" , :style => "background-color:#A513B6" %>
+              <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <br>
+</section>
+<script type="text/javascript">
+    $("select").mousedown(function(e){
+        e.preventDefault();
+
+        var select = this;
+        var scroll = select .scrollTop;
+
+        e.target.selected = !e.target.selected;
+
+        setTimeout(function(){select.scrollTop = scroll;}, 0);
+
+        $(select ).focus();
+    }).mousemove(function(e){e.preventDefault()});
+</script>
