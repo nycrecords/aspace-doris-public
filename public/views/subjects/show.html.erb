@@ -34,7 +34,11 @@
           <!-- Placeholder column to align margins -->
         </div>
 
-        <div class="col-8">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-8">
+        <% end %>
           <!-- Table rows -->
           <% unless @results.blank? || @results['total_hits'] == 0 %>
             <table class="table">
@@ -49,7 +53,11 @@
         </div>
 
         <!-- Side bar-->
-        <div class="col-3">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-3">
+        <% end %>
           <h3 class="h4">Subject Term Details</h3>
           <% if !(terms = ASUtils.wrap(@result['json']['terms'])).empty? %>
             <%= render partial: 'subjects/terms', locals: {:terms =>  terms, :list_clss => 'terms'} %>

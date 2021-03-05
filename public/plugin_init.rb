@@ -1,4 +1,5 @@
 Rails.application.config.after_initialize do
+
   class SubjectsController
     def index
       repo_id = params.fetch(:rid, nil)
@@ -51,11 +52,16 @@ Rails.application.config.after_initialize do
           @subject_types[sub_type] = [result]
         end
       end
-      render 'search/subjects_search_results'
+       if device_type == "mobile"
+         render 'search/subjects_search_results_mobile'
+       else
+         render 'search/subjects_search_results'
+       end
     end
   end
 
   class AgentsController
+
     def index
       repo_id = params.fetch(:rid, nil)
       Rails.logger.debug("repo_id: #{repo_id}")
@@ -629,5 +635,4 @@ Rails.application.config.after_initialize do
 
     end
   end
-
 end
