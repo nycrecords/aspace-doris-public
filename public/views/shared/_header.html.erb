@@ -62,7 +62,7 @@
         <div class="col-lg">
           <div class="d-flex justify-content-center justify-content-lg-start">
             <a class="align-self-center" href="https://nyc.gov/doris" title="Home">
-              <img src="<%= AppConfig[:public_proxy_prefix] %>assets/images/DORIS-logo.png" alt="DORIS" width="35%">
+              <img <% if device_type == 'mobile' %>class="d-block mx-auto img-responsive" <% end %>src="<%= AppConfig[:public_proxy_prefix] %>assets/images/DORIS-logo.png" alt="DORIS" width="35%">
             </a>
           </div>
           <!-- .d-flex -->

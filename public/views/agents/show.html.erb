@@ -20,7 +20,11 @@
           <!-- Placeholder column to fix margins -->
         </div>
 
-        <div class="col-8">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-8">
+        <% end %>
           <!-- Table rows -->
           <% unless @results.blank? || @results['total_hits'] == 0 %>
             <table class="table">
@@ -35,7 +39,11 @@
         </div>
 
         <!-- Side bar -->
-        <div class="col-3">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-3">
+        <% end %>
           <% if @result.json['names'].length > 1 %>
             <h3 class="h4">Other Names</h3>
             <% other_names = @result.json['names'].reject{|name| name['is_display_name']}.collect{|name| name['sort_name']} %>

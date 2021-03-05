@@ -16,7 +16,7 @@
           <div class="container names">
             <div class="row matrix-gutter">
               <div id="azindex">
-                <ul id="index">
+                <ul id="index"<% if device_type=='mobile' %> class="pl-0" <% end %>>
                   <ul>
                     <li>
                       <a href="?begins_with=%23" <% if search_char == '#'%>class ="selected-index"<% end %>>#</a>

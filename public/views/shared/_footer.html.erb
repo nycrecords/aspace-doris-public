@@ -4,7 +4,9 @@
   </h2>
   <section class="featured-panel device-lg">
     <div class="card bg-dark">
+      <% unless device_type == "mobile" %>
       <img class="card-img opacity-40 full-opacity-on-device" src="<%= AppConfig[:public_proxy_prefix] %>assets/images/ebbets_field.jpg" alt="Card image">
+      <% end %>
       <div class="card-img-overlay d-flex px-0">
         <div class="container align-self-center">
           <div class="row text-center text-white">
@@ -46,7 +48,7 @@
     <div class="container py-3">
       <div class="row">
         <div class="col-md-6 col-lg-8 mb-3 mb-lg-0">
-          <nav class="row fs-md" role="navigation">
+          <nav class="row fs-md <%if device_type == 'mobile' %> text-center <% end %>" role="navigation">
             <div class="col-lg mb-3 mb-lg-0">
               <ul class="extensible-list">
                 <li>

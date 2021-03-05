@@ -1,0 +1,112 @@
+<% results_type = (defined?(@results_type) ? @results_type : t('search_results.results')) %>
+<div class="row">
+    <div class="col-sm-12">
+        <%= render partial: 'shared/breadcrumbs' %>
+    </div>
+</div>
+<% if defined?(@results) %>
+  <div class="row">
+      <div class="col-12">
+        <a name="main" title="<%= t('internal_links.main') %>"></a>
+        <main id="skip-header-target" role="main">
+          <section class="py-5">
+            <div class="container">
+              <div class="row matrix-gutter">
+                <div class="accordion-group w-100" role="tablist" id="accordion-01">
+
+                  <div class="card">
+                    <a class="card-header h4 collapse collapsed" id="topics-panel" data-toggle="collapse" href="#panel-topics-panel"   role="tab" aria-expanded="false" aria-controls="panel-topics-panel">
+                      <span class="title" role="heading" aria-level="3">
+                          <span class="fa fa-tag"></span>
+                          Topics
+                      </span>
+                    </a>
+                    <div class="collapse" id="panel-topics-panel" role="tabpanel" aria-labelledby="topics-panel" data-parent="#accordion-01">
+                      <div class="card-body bg-white">
+                        <% @subject_types.each do |subject_type, subjects_info| %>
+                          <% if subject_type == 'topical' %>
+                            <% subjects_info.each do |subject_info| %>
+                              <a name="searchresults" id="searchresults"></a>
+                              <%= render partial: 'landing/subjects/subjects_result', locals: {:result => subject_info, :props => (@result_props ||
+                                  {}).merge({:full => false})} %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <a class="card-header h4 collapse collapsed" id="material-types-panel" data-toggle="collapse" href="#panel-material-types-panel-panel"   role="tab" aria-expanded="false" aria-controls="panel-material-types-panel-panel">
+                        <span class="title" role="heading" aria-level="3">
+                            <span class="fa fa-file"></span>
+                            Material Types
+                        </span>
+                    </a>
+                    <div class="collapse" id="panel-material-types-panel-panel" role="tabpanel" aria-labelledby="material-types-panel-panel" data-parent="#accordion-01">
+                      <div class="card-body bg-white">
+                        <% @subject_types.each do |subject_type, subjects_info| %>
+                          <% if subject_type == 'genre_form' %>
+                            <% subjects_info.each do |subject_info| %>
+                              <a name="searchresults" id="searchresults"></a>
+                              <%= render partial: 'landing/subjects/subjects_result', locals: {:result => subject_info, :props => (@result_props ||
+                                  {}).merge({:full => false})} %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <a class="card-header h4 collapse collapsed" id="places-panel" data-toggle="collapse" href="#panel-places-panel"   role="tab" aria-expanded="false" aria-controls="panel-places-panel">
+                          <span class="title" role="heading" aria-level="3">
+                              <span class="fa-map-marker-alt"></span>
+                              Places
+                          </span>
+                    </a>
+                    <div class="collapse" id="panel-places-panel" role="tabpanel" aria-labelledby="places-panel" data-parent="#accordion-01">
+                      <div class="card-body bg-white">
+                        <% @subject_types.each do |subject_type, subjects_info| %>
+                          <% if subject_type == 'geographic' %>
+                            <% subjects_info.each do |subject_info| %>
+                              <a name="searchresults" id="searchresults"></a>
+                              <%= render partial: 'landing/subjects/subjects_result', locals: {:result => subject_info, :props => (@result_props ||
+                                  {}).merge({:full => false})} %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <a class="card-header h4 collapse collapsed" id="occupations-panel" data-toggle="collapse" href="#panel-occupations-panel"   role="tab" aria-expanded="false" aria-controls="panel-occupations-panel">
+                            <span class="title" role="heading" aria-level="3">
+                                <span class="fa fa-address-card"></span>
+                                Occupations
+                            </span>
+                    </a>
+                    <div class="collapse" id="panel-occupations-panel" role="tabpanel" aria-labelledby="occupations-panel" data-parent="#accordion-01">
+                      <div class="card-body bg-white">
+                        <% @subject_types.each do |subject_type, subjects_info| %>
+                          <% if subject_type == 'occupation' %>
+                            <% subjects_info.each do |subject_info| %>
+                              <a name="searchresults" id="searchresults"></a>
+                              <%= render partial: 'landing/subjects/subjects_result', locals: {:result => subject_info, :props => (@result_props ||
+                                  {}).merge({:full => false})} %>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+           </section>
+        </main>
+      </div>
+  </div>
+<% end %>
