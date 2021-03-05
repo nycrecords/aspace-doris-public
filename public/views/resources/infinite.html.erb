@@ -2,7 +2,11 @@
 <main id="skip-header-target" role="main">
   <section class="py-3 justify-content-center">
 
-    <div class="container-flex mx-6 description">
+    <% if device_type == 'mobile' %>
+      <div class="container-flex mx-4 description">
+    <% else %>
+      <div class="container-flex mx-6 description">
+    <% end %>
 
       <div class="information col-sm-7">
       <%= render partial: 'resources/idbadge', locals: {:result => @result,:has_digital_instance => @has_digital_instance,:props => { :full => true} } %>
@@ -15,12 +19,20 @@
       <%= javascript_include_tag "#{@base_url}/assets/javascripts/treeview" %>
       <div class="row" id="notes_row">
 
-        <div id="record_info" class="col-8">
+        <% if device_type == 'mobile' %>
+          <div id="record_info" class="col-12">
+        <% else %>
+          <div id="record_info" class="col-8">
+        <% end %>
           <%= render partial: 'resources/infinite_item', locals: {:result => @result, :props => { :full => true} } %>
           <div id="child_info"></div>
         </div>
 
-        <div id="sidebar" class="sidebar sidebar-container col-4 sticky-top">
+        <% if device_type == 'mobile' %>
+          <div id="sidebar" class="sidebar sidebar-container col-12 sticky-top">
+        <% else %>
+          <div id="sidebar" class="sidebar sidebar-container col-4 sticky-top">
+        <% end %>
 
           <% if AppConfig[:pui_search_collection_from_collection_organization] %>
             <%= render partial: 'shared/search_collection_form', :locals => {:resource_uri => @result['uri'], :action_text => t('actions.search_in', :type => t('resource._singular'))} %>
