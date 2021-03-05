@@ -31,12 +31,12 @@
 
                 <div class="form-group">
                   <%= form.label :subject , "Collections" , :style => "color:#181A7B;font-weight:bold"%>
-                    <%= select_tag 'research_request[collections]' , options_from_collection_for_select(@research_links.collections,:title,:title) , size:3 , multiple:true %>
+                    <%= select_tag 'research_request[collections]' , options_from_collection_for_select(@research_links.collections,:title,:title) , size:6 , multiple:true %>
                 </div>
 
                 <div class="form-group">
                   <%= form.label :subject , "Accessions", :style => "color:#181A7B;font-weight:bold"%>
-                  <%= select_tag 'research_request[accessions]' , options_from_collection_for_select(@research_links.accessions,:title,:title) , size: 3 , multiple:true %>
+                  <%= select_tag 'research_request[accessions]' , options_from_collection_for_select(@research_links.accessions,:title,:title) , size: 6 , multiple:true %>
                 </div>
 
                 <div class="form-group">
