@@ -109,7 +109,11 @@
         <% end %>
 
         <!-- Side bar -->
-        <div id="accessions-sidebar" class="col-3">
+        <% if device_type == 'mobile' %>
+          <div id="accessions-sidebar" class="col-12">
+        <% else %>
+          <div id="accessions-sidebar" class="col-3">
+        <% end %>
           <div id="related-accessions" class="hidden pb-2">
             <div class="col pt-1">
               <h2 class="h3">Related Accessions</h2>
