@@ -2,7 +2,11 @@
   <section class="py-3 d-flex justify-content-center">
     <div class="container-fluid mx-3 description">
       <div class="row matrix-gutter justify-content-center">
-        <div class="col-8">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-8">
+        <% end %>
           <!-- Top headings -->
           <div class="col"><%= render partial: 'accessions/idbadge', locals: {:result => @result, :props => { :full => true} } %></div>
           <!-- Page actions probably not needed for accessions -->
@@ -13,7 +17,11 @@
           <!-- Placeholder column to align margins -->
         </div>
 
-        <div class="col-8">
+        <% if device_type == 'mobile' %>
+          <div class="col-12">
+        <% else %>
+          <div class="col-8">
+        <% end %>
           <hr>
 
           <div class="col pt-1 pb-1">
