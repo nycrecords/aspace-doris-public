@@ -37,8 +37,11 @@ end
   <% else %>
     <% url = result.uri %>
 <% end %>
-
-<h2 <% if defined? (pad) %>class="pl-5" <% end %>>
+<% if device_type == 'mobile' %>
+  <h2 <% if defined? (pad) %>class="pl-3" <% end %>>
+<% else %>
+  <h2 <% if defined? (pad) %>class="pl-5" <% end %>>
+<% end %>
   <% if !props.fetch(:full,false) %>
     <div class="card m-2">
       <button class="btn btn-md btn-light text-primary">
@@ -57,7 +60,11 @@ end
   c.fetch('breadcrumb').each do |crumb, i|
      crumb_uri = crumb.fetch(:uri)
        crumb_uri = c.fetch('uri') if crumb_uri.blank? %>
-    <p class="mb-1 <% if defined? (pad) %>pl-5<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), '/classifications#recordrow-'+crumb.fetch(:crumb).split('.')[0].downcase.parameterize.underscore,class: 'description' %></p>
+    <% if device_type == 'mobile' %>
+      <p class="mb-1 <% if defined? (pad) %>pl-3<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), '/classifications#recordrow-'+crumb.fetch(:crumb).split('.')[0].downcase.parameterize.underscore,class: 'description' %></p>
+    <% else %>
+      <p class="mb-1 <% if defined? (pad) %>pl-5<% end %>"><%=t('resource._singular') %> <%= @result.ead_id %> - <%= link_to crumb.fetch(:crumb), '/classifications#recordrow-'+crumb.fetch(:crumb).split('.')[0].downcase.parameterize.underscore,class: 'description' %></p>
+    <% end %>
   <%end
 end %>
 <script>

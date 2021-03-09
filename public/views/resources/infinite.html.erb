@@ -8,7 +8,7 @@
       <div class="container-flex mx-6 description">
     <% end %>
 
-      <div class="information col-sm-7">
+      <div class="information col-sm-7 <% if device_type == 'mobile' %>pl-0<% end %>">
       <%= render partial: 'resources/idbadge', locals: {:result => @result,:has_digital_instance => @has_digital_instance,:props => { :full => true} } %>
       </div>
 
