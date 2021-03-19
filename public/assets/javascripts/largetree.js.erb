@@ -712,8 +712,8 @@
                 dataType: 'json',
                 data: { data_links: data_links},
                 success: function(data){
-                    let identifiers = data['identifiers'];
-                    let i=1;
+                    var identifiers = data['identifiers'];
+                    var i=1;
                     //Prepending identifiers to sidebar
                     $('.id-badge').each(function(){
                         $(this).text(identifiers[i]+" ");
