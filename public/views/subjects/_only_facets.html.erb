@@ -19,7 +19,7 @@
     <% ordered_facet_types.each do |type| %>
       <% h = @facets.fetch(type, false) %>
       <% next unless h %>
-      <dt><%= t("search_results.filter.#{type}") %></dt>
+      <dt><%= t("search_results.filter.#{type}._singular") %></dt>
       <ul>
         <% facet_count = 0 %>
         <% h.each do |v, ct| %>
