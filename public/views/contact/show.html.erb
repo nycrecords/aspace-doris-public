@@ -35,14 +35,10 @@
                 </div>
 
                 <div class="form-group">
-                  <%= form.label :subject , "Accessions", :style => "color:#181A7B;font-weight:bold"%>
-                  <%= select_tag 'research_request[accessions]' , options_from_collection_for_select(@research_links.accessions,:title,:title) , size: 6 , multiple:true%>
+                  <%= form.label :additional_links , "Additional links", :style => "color:#181A7B;font-weight:bold"%>
+                  <%= form.text_area :additional_links , size: "70x5" , class: "form-control",placeholder: "Please share any links to specific series or files you are interested in viewing. "%>
                 </div>
 
-                <div class="form-group">
-                  <%= form.label :additional_links , "Additional links", :style => "color:#181A7B;font-weight:bold"%>
-                  <%= form.text_area :additional_links , size: "70x5" , class: "form-control",placeholder: " Please share any links to specific series or files you are interested in viewing. "%>
-                </div>
                 <%= form.submit "Submit" , class: "btn btn-primary" , :style => "background-color:#A513B6" %>
               <% end %>
                 </div>
