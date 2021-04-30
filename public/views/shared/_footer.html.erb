@@ -5,13 +5,16 @@
   <section class="featured-panel device-lg">
     <div class="card bg-dark">
       <% unless device_type == "mobile" %>
-      <img class="card-img opacity-40 full-opacity-on-device" src="<%= AppConfig[:public_proxy_prefix] %>assets/images/ebbets_field.jpg" alt="Card image">
+        <img class="card-img opacity-40 full-opacity-on-device"
+             src="<%= AppConfig[:public_proxy_prefix] %>assets/images/ebbets_field.jpg"
+             alt="Ebbets field blueprint background"
+             aria-label="Ebbets field blueprint background">
       <% end %>
       <div class="card-img-overlay d-flex px-0">
         <div class="container align-self-center">
           <div class="row text-center text-white">
             <div class="col-lg-4 py-3">
-              <h2 class="h4">Digital Collections</h2>
+              <h3 class="h4">Digital Collections</h3>
               <p>
                 View more than 1 million digitized items
               </p>
@@ -19,7 +22,7 @@
             </div>
             <!-- .col -->
             <div class="col-lg-4 py-3">
-              <h2 class="h4">For the Record Blog</h2>
+              <h3 class="h4">For the Record Blog</h3>
               <p>
                 Read highlights from the archives
               </p>
@@ -27,7 +30,7 @@
             </div>
             <!-- .col -->
             <div class="col-lg-4 py-3">
-              <h2 class="h4">Support the Archives</h2>
+              <h3 class="h4">Support the Archives</h3>
               <p>
                 Donate, adopt an item, or purchase prints
               </p>
@@ -72,16 +75,20 @@
                   </strong>
                 </li><br>
                 <li>
-                  <a class="text-reset" href="https://twitter.com/nycrecords">
+                  <a class="text-reset" href="https://twitter.com/nycrecords"
+                     aria-label="NYC Department of Records and Information Services Twitter account">
                     <span class="fab fa-lg fa-twitter-square"></span>&nbsp;
                   </a>
-                  <a class="text-reset" href="http://www.facebook.com/nycrecords">
+                  <a class="text-reset" href="http://www.facebook.com/nycrecords"
+                     aria-label="NYC Department of Records and Information Services Facebook account">
                     <span class="fab fa-lg fa-facebook-square"></span>&nbsp;
                   </a>
-                  <a class="text-reset" href="https://www.instagram.com/nycarchives/">
+                  <a class="text-reset" href="https://www.instagram.com/nycarchives/"
+                     aria-label="NYC Department of Records and Information Services Instagram account">
                     <span class="fab fa-lg fa-instagram"></span>&nbsp;
                   </a>
-                  <a class="text-reset" href="http://www.youtube.com/nycdeptofrecords">
+                  <a class="text-reset" href="http://www.youtube.com/nycdeptofrecords"
+                     aria-label="NYC Department of Records and Information Services Youtube account">
                     <span class="fab fa-lg fa-youtube-square"></span>&nbsp;
                   </a>
                 </li>
