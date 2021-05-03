@@ -144,15 +144,14 @@
       <nav class="nav nav-pills" role="navigation">
         <% $MAIN_MENU.each_with_index do |link, index| %>
           <div class="nav-item">
-            <a class="nav-link <%= 'active' if app_prefix(link[0]).include? params[:controller] %>" href="<%= app_prefix(link[0]) %>" id="nav-item-0<%= index + 1 %>"
-               aria-haspopup="true" aria-expanded="false" role="button">
+            <a class="nav-link <%= 'active' if app_prefix(link[0]).include? params[:controller] %>" href="<%= app_prefix(link[0]) %>" id="nav-item-0<%= index + 1 %>">
               <%= t(link[1]) %>
             </a>
           </div>
           <!-- .nav-item -->
         <% end %>
         <div class="nav-item">
-          <a class="nav-link" href="https://nycma.lunaimaging.com" role="button">
+          <a class="nav-link" href="https://nycma.lunaimaging.com">
             Digital Collections <span class="fa fa-external-link-square-alt"></span>
           </a>
         </div>
