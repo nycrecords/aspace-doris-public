@@ -1,0 +1,19 @@
+<main role="main">
+  <section class="py-3">
+    <div class="container">
+      <h2><%= render partial: 'classifications/single_classification_idbadge', locals: {:result => @result, :props => {:full => true, :heading => true}} %></h2>
+      <div class="pb-1">
+        <% unless @results.blank? || @results['total_hits'] == 0 %>
+          <%== @results['total_hits'] == 1 ? t('related_records._singular', {:count => @results['total_hits']}) : t('related_records._plural', {:count => @results['total_hits']})%>
+        <% end %>
+      </div>
+      <hr>
+      <% unless @results.blank? || @results['total_hits'] == 0 %>
+        <% @results.records.each do |result| %>
+          <%= render partial: 'classifications/single_classification_result', locals: {:result => result, :props => {:full => false}} %>
+        <% end %>
+        <%= render partial: 'shared/pagination', locals: {:pager  => @pager}  %>
+      <% end %>
+    </div>
+  </section>
+</main>
