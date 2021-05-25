@@ -1,0 +1,16 @@
+<div class="row matrix-gutter">
+  <div class="col-lg pt-2 mr-3">
+    <h3><%= render partial: 'classifications/single_classification_idbadge', locals: {:result => result, :props => props } %></h3>
+    <% if result['json'].has_key?('dates') || result['json'].has_key?('dates_of_existence') %>
+      <div class="dates pb-2">
+          <% dates = (result['json']['dates'] || result['json']['dates_of_existence']
+          ).collect {|date| parse_date(date)}.reject{|label, expression| expression.blank?} %>
+          <% unless dates.empty? %>
+            <strong><%= t('dates') %>: </strong>
+          <% end %>
+          <%= dates.collect {|label, expression| label.blank? ? expression : "#{label}#{expression}"}.join('; ') %>
+      </div>
+    <% end %>
+    <hr>
+  </div>
+</div>
