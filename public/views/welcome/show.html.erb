@@ -14,6 +14,34 @@
       </div>
     </div>
   </section>
+  <section class="pt-5">
+    <div class="container">
+      <div class="row matrix-gutter">
+        <div class="container-fluid">
+          <% @search = Search.new unless defined?(@search) %>
+          <%= form_tag('/search', method: 'get', :id => 'homepage_search', class: 'narrow py-2', aria: {label: 'Search'}) do %> <!-- form tag begin -->
+            <div class="input-group" id="homepage_search_row">
+              <div class="col-sm-1 bool form-group form-inline hidden">
+                <%= label_tag("op", t('advanced_search.operator_label'), :class => 'sr-only') %>
+                <%= select_tag('op[]', options_for_select(Search.get_boolean_opts, @search[:op][0]), disabled: true, :id => "homepage_search_op_select", :class => 'form-control hidden') %>
+                <%= hidden_field_tag('op[]', '', :id => 'homepage_search_op_input') %>
+              </div>
+              <%= label_tag(:"homepage-search-bar", t('navbar.search_placeholder'), :class => 'sr-only repeats') %>
+              <%= text_field_tag('q[]', @search[:q][0], :placeholder => t('navbar.search_placeholder'), :value => '', :id => 'homepage-search-bar',
+                                 :class => 'form-control form-control-lg') %>
+              <div class="input-group-btn">
+                <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg", id: 'submit_homepage_search', name: 'commit', value: 'Search', title: 'Search', data: {disable_with: '<span class="fas fa-arrow-right" role="img"></span>'}) do %>
+                  <span class="sr-only">Search</span>
+                  <span class="fas fa-arrow-right" role="img"></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %> <!-- Form tag end -->
+          <p class="text-center">Search our collections by keywords such as people, places, subjects, and material types, or try<a href="<%= app_prefix('/search?reset=true') %>" title="<%= I18n.t('search_tab', :target => t('archive._plural')) %>" class="advanced-search-link">advanced search</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- .featured-panel -->
   <section class="py-5">
     <div class="container">
