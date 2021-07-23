@@ -17,6 +17,11 @@
   <section class="pt-5">
     <div class="container">
       <div class="row matrix-gutter">
+        <p class="large text-center">Not sure where to start?
+          <a href="https://youtu.be/rsFDzkJcYuM" target="_blank" rel="noopener noreferrer"><b>Watch our video</b></a>
+          for search tips and
+          <a href="<%= AppConfig[:public_proxy_prefix] %>assets/files/ArchivesSpace_explainer.pdf" target="_blank" rel="noopener noreferrer"><b>read
+            our quickstart guide</b></a> on how we organize collections.</p>
         <div class="container-fluid">
           <% @search = Search.new unless defined?(@search) %>
           <%= form_tag('/search', method: 'get', :id => 'homepage_search', class: 'narrow py-2', aria: {label: 'Search'}) do %> <!-- form tag begin -->
