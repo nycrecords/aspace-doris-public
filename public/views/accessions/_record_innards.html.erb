@@ -91,6 +91,24 @@
     </div>
   <% end %>
 
+  <% unless @result.external_documents.blank? %>
+    <hr>
+    <div class="row col pt-2 pb-2">
+      <div class="col-12 pb-2">
+        <h2 class="h3">External Documents</h2>
+      </div>
+      <div class="col-12">
+        <ul>
+          <% @result.external_documents.each do |external_document| %>
+            <li>
+              <a href="<%= external_document['uri'] %>" target="_blank" rel="noopener noreferrer"><%= external_document['title'] %></a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
   <% non_folder.each do |type| %>
     <% (@result.notes[type] || []).each do |note_struct| %>
       <% unless note_struct['note_text'].blank? %>
