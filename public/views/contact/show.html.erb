@@ -8,6 +8,14 @@
             <div class="row matrix-gutter">
               <div class="justify-content-center align-items-center container ">
                 <div class="w-75 mx-auto mb-2">
+                  <% if params[:confirmation] %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      Your research request has been sent to the Municipal Archives. A copy of your request has been sent to your email.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  <% end %>
                   <h2>Contact Us</h2>
                   <p class="small">Contact us to start your research at the Municipal Archives.</p>
                   <hr/>
