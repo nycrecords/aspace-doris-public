@@ -1,0 +1,44 @@
+<ul id="<%=facet_group %>">
+<% facets.each do |facet, facet_map| %>
+  <li>
+    <% opts = {"add_filter_term" => facet_map[:filter_term]} %>
+    <% opts['facets'] = SearchResultData.facets_for(facet) if facet_group == 'primary_type' %>
+    <%= link_to facet_map[:label], build_search_params(opts) %> <span class="badge"><%= facet_map[:count] %></span>
+  </li>
+<% end %>
+</ul>
+<h3>Topics</h3>
+<ul id="topical"></ul>
+<h3>Material Types</h3>
+<ul id="genre_form"></ul>
+<h3>Places</h3>
+<ul id="geographic"></ul>
+<h3>Occupations</h3>
+<ul id="occupation"></ul>
+
+<script type="text/javascript">
+
+  $.ajax({
+      url : "search/subject_type?type%5B%5D=subject",
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+
+        $("#subjects li").find('a').each(function () {
+
+            var sub_type = ""
+            //Checking if subject belongs to multiple sub-categories
+            if (Array.isArray(data[$(this).text()]))
+                sub_type = data[$(this).text()][0]
+            else
+                sub_type = data[$(this).text()]
+            //Appending subject to sub-category "ul" and removing it from main "ul"
+            document.getElementById(sub_type).innerHTML += "<li>" + $(this).closest("li").html() + "</li>";
+            $(this).closest("li").remove();
+        });
+        $("#subjects").remove();
+      }
+
+  });
+
+</script>
