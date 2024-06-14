@@ -16,6 +16,14 @@
                       </button>
                     </div>
                   <% end %>
+                  <% if params[:recaptcha_error] %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      Recaptcha failed, please try again.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  <% end %>
                   <h2>Contact Us</h2>
                   <p class="small">Contact us to start your research at the Municipal Archives.</p>
                   <p class="small"><strong>Please submit ONE inquiry to expedite response times.</strong> Messages received via email,
@@ -25,7 +33,7 @@
                   <hr/>
                 </div>
                 <div class="align-content-center">
-              <%= form_with url: "/send_request", method:"post" ,:html => {:class=>'w-75 form-style mx-auto'} do |form| %>
+              <%= form_with id: "contact-form", url: "/send_request", method:"post" ,:html => {:class=>'w-75 form-style mx-auto'} do |form| %>
                 <div class="form-group">
                   <%= form.label :name, "Name" , :style => "color:#181A7B;font-weight:bold" , class: "control-label"%>
                   <%= form.text_field :name , class: "form-control",:required => true%>
@@ -50,7 +58,14 @@
                   <%= form.label :additional_links , "Additional links", :style => "color:#181A7B;font-weight:bold"%>
                   <%= form.text_area :additional_links , size: "70x5" , class: "form-control",placeholder: "Please share any links to specific series or files you are interested in viewing. "%>
                 </div>
-
+                  <% if AppConfig[:recaptcha_enabled] %>
+                    <div id='recaptcha'
+                         class="g-recaptcha"
+                         data-sitekey="<%= AppConfig[:recaptcha_public_key] %>"
+                         data-callback="onSubmitContact"
+                         data-action="contactForm"
+                         data-size="invisible"></div>
+                  <% end %>
                 <%= form.submit "Submit" , class: "btn btn-primary" , :style => "background-color:#A513B6" %>
               <% end %>
                 </div>
@@ -63,6 +78,22 @@
   </div>
   <br>
 </section>
+<% if AppConfig[:recaptcha_enabled] %>
+  <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
+  <script type="text/javascript">
+      /**
+       * Handles data-callback for submitting contact form when using recaptcha.
+       */
+      $('#contact-form').submit(function(event) {
+          event.preventDefault(); // prevent form submit before captcha is completed
+          grecaptcha.execute();
+      });
+
+      function onSubmitContact() {
+          $('#contact-form')[0].submit();
+      }
+  </script>
+<% end %>
 <script type="text/javascript">
     $("select").mousedown(function(e){
         e.preventDefault();
