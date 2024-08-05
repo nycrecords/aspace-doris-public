@@ -1,7 +1,8 @@
 <ul>
   <% digital_objects.each do |uri, digital_object| %>
     <li>
-      <%= link_to digital_object.display_string, app_prefix(uri) %>
+      <a href="<%= JSON.parse(digital_object.json['json'])['file_versions'][0]['file_uri'] %>" target="_blank"
+         rel="noopener noreferrer"><%= digital_object.display_string %></a>
     </li>
   <% end %>
 </ul>
