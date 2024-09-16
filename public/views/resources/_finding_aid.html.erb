@@ -12,7 +12,7 @@
             <% if item == "status" %>
               <%= t("resource_finding_aid_status.#{@result.finding_aid[item]}") %>
             <% elsif item == "language" %>
-              <%= t("enumerations.language_iso639_2.#{@result.finding_aid['language_note']}") %>
+              <%= @result.finding_aid['language_note'] %>
             <% elsif item == "script" ||  item == "language_note"%>
                 <% next %>>
             <% elsif item == "description_rules" %>
