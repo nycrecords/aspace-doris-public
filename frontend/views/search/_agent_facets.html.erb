@@ -1,0 +1,36 @@
+<ul id="<%=facet_group %>">
+<% facets.each do |facet, facet_map| %>
+  <li>
+    <% opts = {"add_filter_term" => facet_map[:filter_term]} %>
+    <% opts['facets'] = SearchResultData.facets_for(facet) if facet_group == 'primary_type' %>
+    <%= link_to facet_map[:label], build_search_params(opts) %> <span class="badge"><%= facet_map[:count] %></span>
+  </li>
+<% end %>
+</ul>
+<h3>Person</h3>
+<ul id="agent_person"></ul>
+<h3>Organization</h3>
+<ul id="agent_corporate_entity"></ul>
+
+<script type="text/javascript">
+
+  $.ajax({
+      url: "search/agent_type?type%5B%5D=agent",
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+
+          $("#<%=facet_group %> li").find('a').each(function () {
+
+              var sub_type = ""
+              sub_type = data[$(this).text()]
+              //Appending agent to sub-category "ul" and removing it from main "ul"
+              document.getElementById(sub_type).innerHTML += "<li>" + $(this).closest("li").html() + "</li>";
+              $(this).closest("li").remove();
+          });
+          $("#<%=facet_group %>").remove();
+
+      }
+  });
+
+</script>
